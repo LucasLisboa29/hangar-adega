@@ -60,7 +60,8 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
 
 ## Estado atual do projeto
 
-- **Fase atual:** 0 — Fundação (**em andamento**; parte local concluída)
+- **Fase atual:** 0 — Fundação **CONCLUÍDA** ✅ → próxima é a Fase 1 (Vitrine/Catálogo)
+- **No ar:** https://hangar-adega.vercel.app (deploy contínuo a cada push na `main`)
 - **Concluído nesta fase:** scaffold Next.js 16 + TS + Tailwind v4 + shadcn/ui; tema
   dourado/preto + fontes (Inter/Oswald); landing provisória; Prisma 7 com driver adapter
   e schema das 6 entidades modelado; `seed.ts`; `.env.example`; README. Build OK.
@@ -70,9 +71,10 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
 - **Banco conectado:** Supabase (projeto sa-east-1) com migration `init` aplicada e seed
   rodado (4 categorias, 7 produtos). Runtime usa pooled `:6543`, migrations usam `:5432`.
 - **Repositório:** github.com/LucasLisboa29/hangar-adega (branch `main`).
-- **Pendente da Fase 0:** só falta o **deploy na Vercel** (importar o repo + colar as env
-  vars `DATABASE_URL`/`DIRECT_URL`) para fechar o marco "app no ar + banco conectado".
-- **Próxima tarefa:** deploy na Vercel; depois iniciar a Fase 1 (vitrine/catálogo).
+- **Próxima tarefa:** iniciar a Fase 1 (vitrine/catálogo) — layout base, home com produtos
+  por categoria, página de produto, busca/filtro e página de informações da loja.
+- **Pós-deploy a fazer (segurança):** resetar a senha do banco no Supabase (passou pelo
+  chat) e atualizar `.env` local + env vars na Vercel.
 
 > **Como manter atualizado:** marque o progresso real nos checkboxes de
 > `quebra-de-tarefas.md` (`[ ]` → `[~]` em andamento → `[x]` feito) e atualize só o bloco

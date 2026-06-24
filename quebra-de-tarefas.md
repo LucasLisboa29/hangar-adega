@@ -18,9 +18,9 @@
 - [x] Configurar **Prisma** e conexão com o banco · M — _Prisma 7 + driver adapter `@prisma/adapter-pg`; singleton em `src/lib/prisma.ts`_
 - [x] Modelar entidades: `Categoria`, `Produto`, `Pedido`, `ItemPedido`, `UsuarioAdmin`, `ConfigLoja` · M
 - [x] Rodar primeira **migration** e seed mínimo de teste · P — _migration `init` aplicada; seed com 4 categorias/7 produtos_
-- [ ] Configurar deploy automático na **Vercel** (CI via Git) · M — _depende do GitHub + conta Vercel_
-- [x] Variáveis de ambiente (.env) e segredos no provedor · P — _`.env.example` criado (falta preencher no provedor)_
-- [ ] **Marco:** app no ar (deploy contínuo) + banco conectado
+- [x] Configurar deploy automático na **Vercel** (CI via Git) · M — _hangar-adega.vercel.app; redeploy a cada push na main_
+- [x] Variáveis de ambiente (.env) e segredos no provedor · P — _`.env` local + env vars na Vercel_
+- [x] **Marco:** app no ar (deploy contínuo) + banco conectado ✅ — _https://hangar-adega.vercel.app_
 
 ## Épico 1 — Vitrine / Catálogo (Fase 1)
 
