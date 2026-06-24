@@ -34,6 +34,10 @@ yarn-error.log*
 .env*
 !.env.example
 
+# segredos locais (NUNCA versionar)
+Senha database supabase.txt
+*.secret.txt
+
 # vercel
 .vercel
 
