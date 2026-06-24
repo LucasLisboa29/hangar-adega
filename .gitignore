@@ -38,6 +38,9 @@ yarn-error.log*
 Senha database supabase.txt
 *.secret.txt
 
+# material pessoal gerado por skills (currículo, aulas) — fica só local
+Conteudo adicional/
+
 # vercel
 .vercel
 
