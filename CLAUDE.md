@@ -67,10 +67,12 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
 - **Stack confirmada nas versões reais:** Next 16.2.9, React 19.2.4, Tailwind v4,
   Prisma 7.8 (usa **driver adapters** — `@prisma/adapter-pg`; URL via `prisma.config.ts`,
   não mais no schema). Banco escolhido: **Supabase**.
-- **Pendente (depende do Lucas):** provisionar Postgres no Supabase, criar repo no GitHub
-  e deploy na Vercel. Aí roda a 1ª migration + seed.
-- **Próxima tarefa:** criar projeto no Supabase, preencher `.env`, rodar `npm run db:migrate`
-  e `npm run db:seed`.
+- **Banco conectado:** Supabase (projeto sa-east-1) com migration `init` aplicada e seed
+  rodado (4 categorias, 7 produtos). Runtime usa pooled `:6543`, migrations usam `:5432`.
+- **Repositório:** github.com/LucasLisboa29/hangar-adega (branch `main`).
+- **Pendente da Fase 0:** só falta o **deploy na Vercel** (importar o repo + colar as env
+  vars `DATABASE_URL`/`DIRECT_URL`) para fechar o marco "app no ar + banco conectado".
+- **Próxima tarefa:** deploy na Vercel; depois iniciar a Fase 1 (vitrine/catálogo).
 
 > **Como manter atualizado:** marque o progresso real nos checkboxes de
 > `quebra-de-tarefas.md` (`[ ]` → `[~]` em andamento → `[x]` feito) e atualize só o bloco

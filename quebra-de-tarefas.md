@@ -14,10 +14,10 @@
 - [x] Inicializar projeto **Next.js + TypeScript** · P — _Next.js 16 + Turbopack_
 - [x] Configurar **Tailwind CSS** + base de componentes (ex.: shadcn/ui) · P — _Tailwind v4 + shadcn/ui (radix)_
 - [x] Definir paleta/identidade base (dourado/preto), fontes e logo da Hangar · M — _tema dourado/preto; fontes Inter + Oswald (falta aplicar a logo)_
-- [ ] Criar conta e provisionar **PostgreSQL** (Supabase) · P — _decidido Supabase; depende de conta do Lucas_
+- [x] Criar conta e provisionar **PostgreSQL** (Supabase) · P — _projeto "LucasLisboa29 hangar", região sa-east-1_
 - [x] Configurar **Prisma** e conexão com o banco · M — _Prisma 7 + driver adapter `@prisma/adapter-pg`; singleton em `src/lib/prisma.ts`_
 - [x] Modelar entidades: `Categoria`, `Produto`, `Pedido`, `ItemPedido`, `UsuarioAdmin`, `ConfigLoja` · M
-- [~] Rodar primeira **migration** e seed mínimo de teste · P — _`seed.ts` pronto; rodar quando o banco existir_
+- [x] Rodar primeira **migration** e seed mínimo de teste · P — _migration `init` aplicada; seed com 4 categorias/7 produtos_
 - [ ] Configurar deploy automático na **Vercel** (CI via Git) · M — _depende do GitHub + conta Vercel_
 - [x] Variáveis de ambiente (.env) e segredos no provedor · P — _`.env.example` criado (falta preencher no provedor)_
 - [ ] **Marco:** app no ar (deploy contínuo) + banco conectado
