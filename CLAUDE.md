@@ -71,10 +71,22 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
 - **Banco conectado:** Supabase (projeto sa-east-1) com migration `init` aplicada e seed
   rodado (4 categorias, 7 produtos). Runtime usa pooled `:6543`, migrations usam `:5432`.
 - **Repositório:** github.com/LucasLisboa29/hangar-adega (branch `main`).
-- **Próxima tarefa:** iniciar a Fase 1 (vitrine/catálogo) — layout base, home com produtos
-  por categoria, página de produto, busca/filtro e página de informações da loja.
-- **Pós-deploy a fazer (segurança):** resetar a senha do banco no Supabase (passou pelo
-  chat) e atualizar `.env` local + env vars na Vercel.
+- **Segurança:** senha do banco já foi resetada após o deploy; `.env` local e env vars da
+  Vercel atualizados; arquivo txt com a senha removido. Nada pendente aqui.
+
+### Para retomar na próxima sessão (Fase 1 — Vitrine/Catálogo)
+
+1. **Subir o ambiente:** `npm install` (gera o Prisma Client via postinstall) → `npm run dev`
+   → http://localhost:3000. O `.env` local já está preenchido e conectando ao Supabase.
+2. **Conferir o banco (opcional):** `npm run db:studio` abre a GUI com as categorias/produtos.
+3. **O que construir (ver Épico 1 em [quebra-de-tarefas.md](quebra-de-tarefas.md)):**
+   layout base (header/footer com a marca, responsivo) → home com produtos agrupados por
+   categoria (lendo do banco via `src/lib/prisma.ts`) → card de produto → página de produto
+   → busca + filtro por categoria → página "Informações da loja".
+4. **Pontos de partida no código:** landing atual em `src/app/page.tsx` (trocar pela home
+   real); cliente do banco em `src/lib/prisma.ts`; componentes shadcn em `src/components/ui`.
+5. **Lembrete da stack:** Next 16 / Tailwind v4 / Prisma 7 têm breaking changes — antes de
+   escrever código, consultar os guias em `node_modules/next/dist/docs/` (ver [AGENTS.md](AGENTS.md)).
 
 > **Como manter atualizado:** marque o progresso real nos checkboxes de
 > `quebra-de-tarefas.md` (`[ ]` → `[~]` em andamento → `[x]` feito) e atualize só o bloco
