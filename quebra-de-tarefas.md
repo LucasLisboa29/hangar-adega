@@ -10,7 +10,7 @@
 
 ## Épico 0 — Fundação (Fase 0)
 
-- [~] Criar repositório Git (GitHub) e definir README inicial · P — _Git local + README feitos; falta criar o remoto no GitHub_
+- [x] Criar repositório Git (GitHub) e definir README inicial · P — _repo: github.com/LucasLisboa29/hangar-adega_
 - [x] Inicializar projeto **Next.js + TypeScript** · P — _Next.js 16 + Turbopack_
 - [x] Configurar **Tailwind CSS** + base de componentes (ex.: shadcn/ui) · P — _Tailwind v4 + shadcn/ui (radix)_
 - [x] Definir paleta/identidade base (dourado/preto), fontes e logo da Hangar · M — _tema dourado/preto; fontes Inter + Oswald (falta aplicar a logo)_
