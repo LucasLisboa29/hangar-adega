@@ -1,0 +1,104 @@
+// Schema do banco da Plataforma Hangar Bebidas.
+// Preços são armazenados em CENTAVOS (Int) para evitar erros de ponto flutuante.
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────── Catálogo ───────────────────────────
+
+model Categoria {
+  id           String    @id @default(cuid())
+  nome         String
+  slug         String    @unique
+  ordem        Int       @default(0)
+  ativa        Boolean   @default(true)
+  produtos     Produto[]
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+}
+
+model Produto {
+  id            String       @id @default(cuid())
+  nome          String
+  slug          String       @unique
+  descricao     String?
+  precoCentavos Int
+  imagemUrl     String?
+  ativo         Boolean      @default(true)
+  esgotado      Boolean      @default(false)
+  destaque      Boolean      @default(false)
+  categoriaId   String
+  categoria     Categoria    @relation(fields: [categoriaId], references: [id])
+  itens         ItemPedido[]
+  criadoEm      DateTime     @default(now())
+  atualizadoEm  DateTime     @updatedAt
+
+  @@index([categoriaId])
+}
+
+// ─────────────────────────── Pedidos ───────────────────────────
+
+enum StatusPedido {
+  RECEBIDO
+  EM_PREPARO
+  SAIU_PARA_ENTREGA
+  ENTREGUE
+  CANCELADO
+}
+
+model Pedido {
+  id              String       @id @default(cuid())
+  numero          Int          @unique @default(autoincrement())
+  clienteNome     String
+  clienteTelefone String
+  enderecoEntrega String
+  observacoes     String?
+  status          StatusPedido @default(RECEBIDO)
+  totalCentavos   Int
+  itens           ItemPedido[]
+  criadoEm        DateTime     @default(now())
+  atualizadoEm    DateTime     @updatedAt
+}
+
+model ItemPedido {
+  id            String   @id @default(cuid())
+  pedidoId      String
+  pedido        Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  produtoId     String?
+  produto       Produto? @relation(fields: [produtoId], references: [id])
+  // Snapshots no momento da compra (preservam o histórico se o produto mudar/sumir)
+  nomeProduto   String
+  precoCentavos Int
+  quantidade    Int
+
+  @@index([pedidoId])
+}
+
+// ─────────────────────────── Admin / Loja ───────────────────────────
+
+model UsuarioAdmin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  nome      String?
+  senhaHash String?
+  criadoEm  DateTime @default(now())
+}
+
+model ConfigLoja {
+  id                   String   @id @default(cuid())
+  nome                 String   @default("Hangar Bebidas")
+  whatsapp             String?
+  telefone             String?
+  endereco             String?
+  pedidoMinimoCentavos Int      @default(2500)
+  areaEntrega          String?
+  aberta               Boolean  @default(true)
+  atualizadoEm         DateTime @updatedAt
+}
