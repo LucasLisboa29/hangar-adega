@@ -24,30 +24,31 @@
 
 ## Épico 1 — Vitrine / Catálogo (Fase 1)
 
-- [ ] Layout base do site (header, footer, navegação) responsivo · M
-- [ ] Aplicar identidade visual da Hangar ao layout · M
-- [ ] Home com listagem de produtos agrupados por categoria · M
-- [ ] Componente de card de produto (foto, nome, preço) · P
-- [ ] Página de produto (imagem maior, descrição, preço, botão adicionar) · M
-- [ ] Navegação/filtro por categoria (melhor que scroll horizontal) · M
-- [ ] Busca por nome do produto · M
-- [ ] Página "Informações da loja" (endereço, telefone, horário, mínimo, área) · P
-- [ ] Lazy-load / otimização de imagens dos produtos · P
-- [ ] Popular catálogo com subconjunto **real** de produtos para parecer convincente · M
-- [ ] **Marco:** loja navegável e bonita no celular
+- [x] Layout base do site (header, footer, navegação) responsivo · M — _SiteHeader (sticky + busca) + SiteFooter_
+- [x] Aplicar identidade visual da Hangar ao layout · M — _tema dourado/preto global (dark), fontes Oswald/Inter_
+- [x] Home com listagem de produtos agrupados por categoria · M — _seções por categoria via `getCategoriasComProdutos`_
+- [x] Componente de card de produto (foto, nome, preço) · P — _`ProductCard` com badges Destaque/Esgotado_
+- [x] Página de produto (imagem maior, descrição, preço, botão adicionar) · M — _`/produto/[slug]` SSG; botão é seam da Fase 2_
+- [x] Navegação/filtro por categoria (melhor que scroll horizontal) · M — _pills `?categoria=slug` (`CategoryPills`)_
+- [x] Busca por nome do produto · M — _form GET `?q=` + `buscarProdutos` (contains insensitive)_
+- [x] Página "Informações da loja" (endereço, telefone, horário, mínimo, área) · P — _`/loja` lê `ConfigLoja`_
+- [x] Lazy-load / otimização de imagens dos produtos · P — _`next/image` (fill+sizes, lazy nativo); `remotePatterns` do Supabase configurado_
+- [x] Pipeline de imagens padronizadas (recorte + canvas) · M — _`scripts/produtos-imagens.ts`: Open Food Facts → remove fundo (onnx em processo isolado) → canvas quadrado → webp transparente; 19 produtos com foto, resto placeholder (curadoria/upload Supabase pendentes)_
+- [x] Popular catálogo com subconjunto **real** de produtos para parecer convincente · M — _seed: 10 categorias / 33 produtos_
+- [x] **Marco:** loja navegável e bonita no celular — _verificado no preview (mobile + desktop)_
 
 ## Épico 2 — Carrinho & Checkout (Fase 2)
 
-- [ ] Estado do carrinho (adicionar, remover, quantidade) · M
-- [ ] Persistência do carrinho (localStorage ou sessão) · P
-- [ ] Tela/painel do carrinho com subtotal e total · M
-- [ ] Regra de **pedido mínimo** (bloqueio + aviso de quanto falta) · P
-- [ ] Tela de checkout: dados de entrega + forma de pagamento (na entrega) · M
-- [ ] Confirmação de **maioridade (+18)** antes de finalizar · P
-- [ ] Montar mensagem estruturada do pedido e abrir **WhatsApp** (`wa.me`) · M
-- [ ] Salvar pedido no banco (para o admin listar depois) · M
-- [ ] Validações de formulário (campos obrigatórios, área de entrega) · P
-- [ ] **Marco:** cliente fecha um pedido fim a fim pelo celular
+- [x] Estado do carrinho (adicionar, remover, quantidade) · M — _`CartProvider` (Context + reducer); `AddToCartButton` (stepper) + `QuickAddButton` ("+" no card)_
+- [x] Persistência do carrinho (localStorage ou sessão) · P — _localStorage `hangar.carrinho.v1` (hidrata no mount); verificado após reload_
+- [x] Tela/painel do carrinho com subtotal e total · M — _drawer (`Sheet` sobre radix `Dialog`) com badge no header, stepper e remover_
+- [x] Regra de **pedido mínimo** (bloqueio + aviso de quanto falta) · P — _aviso "faltam R$ X"; "Finalizar" bloqueado abaixo do mínimo (drawer + checkout); revalidado no servidor_
+- [x] Tela de checkout: dados de entrega + forma de pagamento (na entrega) · M — _`/checkout`; forma (Dinheiro/Cartão/Pix) + troco condicional_
+- [x] Confirmação de **maioridade (+18)** antes de finalizar · P — _checkbox obrigatório (client + server)_
+- [x] Montar mensagem estruturada do pedido e abrir **WhatsApp** (`wa.me`) · M — _`montarMensagemPedido`/`linkWhatsApp`; nº placeholder (trocar pelo do dono)_
+- [x] Salvar pedido no banco (para o admin listar depois) · M — _Server Action `criarPedido` revalida preços/total no servidor; cria `Pedido`+`ItemPedido`; tela `/pedido/[numero]`_
+- [x] Validações de formulário (campos obrigatórios, área de entrega) · P — _campos obrigatórios + +18 + mínimo; revalidação autoritativa na action_
+- [x] **Marco:** cliente fecha um pedido fim a fim pelo celular — _verificado fim-a-fim no preview + pedido confirmado no banco_
 
 ## Épico 3 — Painel Admin (Fase 3)
 

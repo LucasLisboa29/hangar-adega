@@ -41,6 +41,9 @@ Senha database supabase.txt
 # material pessoal gerado por skills (currículo, aulas) — fica só local
 Conteudo adicional/
 
+# imagens de produto geradas localmente (modo --dry); o destino final é o Supabase Storage
+/public/produtos/
+
 # vercel
 .vercel
 

@@ -60,6 +60,9 @@ model Pedido {
   clienteTelefone String
   enderecoEntrega String
   observacoes     String?
+  // Pagamento é na entrega (sem gateway no MVP). Snapshot da escolha do checkout.
+  formaPagamento    String? // "dinheiro" | "cartao" | "pix"
+  trocoParaCentavos Int? // só quando formaPagamento = "dinheiro"
   status          StatusPedido @default(RECEBIDO)
   totalCentavos   Int
   itens           ItemPedido[]
