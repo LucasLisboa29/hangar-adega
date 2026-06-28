@@ -13,13 +13,16 @@
     "db:seed": "prisma db seed",
     "db:imagens": "tsx scripts/produtos-imagens.ts",
     "db:studio": "prisma studio",
-    "db:reset": "prisma migrate reset"
+    "db:reset": "prisma migrate reset",
+    "admin:criar": "tsx scripts/criar-admin.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@supabase/supabase-js": "^2.108.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "jose": "^6.2.3",
     "lucide-react": "^1.21.0",
     "next": "16.2.9",
     "radix-ui": "^1.6.0",
@@ -31,7 +34,6 @@
   },
   "devDependencies": {
     "@imgly/background-removal-node": "^1.4.5",
-    "@supabase/supabase-js": "^2.108.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

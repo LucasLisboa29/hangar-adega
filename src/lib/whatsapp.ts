@@ -6,11 +6,19 @@ import { formatBRL } from "@/lib/format";
 
 export type FormaPagamento = "dinheiro" | "cartao" | "pix";
 
-const ROTULO_PAGAMENTO: Record<FormaPagamento, string> = {
+export const ROTULO_PAGAMENTO: Record<FormaPagamento, string> = {
   dinheiro: "Dinheiro",
   cartao: "Cartão (na entrega)",
   pix: "Pix (na entrega)",
 };
+
+/** Rótulo da forma de pagamento a partir do valor salvo (pode ser null/desconhecido). */
+export function rotuloPagamento(forma: string | null | undefined): string {
+  if (forma && forma in ROTULO_PAGAMENTO) {
+    return ROTULO_PAGAMENTO[forma as FormaPagamento];
+  }
+  return "—";
+}
 
 export type ItemMensagem = {
   nome: string;

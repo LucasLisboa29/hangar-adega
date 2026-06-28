@@ -52,18 +52,18 @@
 
 ## Épico 3 — Painel Admin (Fase 3)
 
-- [ ] **Login** protegido do admin (Auth.js/NextAuth ou auth do Supabase) · M
-- [ ] Layout do painel (área autenticada, navegação) · M
-- [ ] Listagem de produtos no admin · P
-- [ ] Criar/editar produto (nome, preço, descrição, categoria) · M
-- [ ] **Upload de imagem** do produto (Supabase Storage/Cloudinary) · M
-- [ ] Excluir produto · P
-- [ ] Marcar produto **ativo/esgotado** · P
-- [ ] **Edição rápida de preço** · P
-- [ ] CRUD de **categorias** · M
-- [ ] **Listagem de pedidos** recebidos (data, itens, total, cliente) · M
-- [ ] (Se sobrar tempo) Configurações da loja (horário, mínimo, área) · M
-- [ ] **Marco:** dono cadastra/edita produto e vê pedidos sem depender de ninguém
+- [x] **Login** protegido do admin (Auth.js/NextAuth ou auth do Supabase) · M — _sessão própria com `jose` (cookie JWT assinado) + senha com `scrypt` (node:crypto); `proxy.ts` (otimista) + DAL `verificarSessao` (real); `npm run admin:criar` semeia o `UsuarioAdmin`_
+- [x] Layout do painel (área autenticada, navegação) · M — _route group `(painel)`: header + nav (Visão geral/Produtos/Pedidos) + Sair; loja pública movida para `(site)` para não herdar a moldura_
+- [x] Listagem de produtos no admin · P — _tabela com todos os produtos (incl. inativos/esgotados)_
+- [x] Criar/editar produto (nome, preço, descrição, categoria) · M — _form compartilhado novo/editar; slug auto no cadastro, preservado na edição; revalida a vitrine_
+- [~] **Upload de imagem** do produto (Supabase Storage/Cloudinary) · M — _fiado e funcionando (bucket "produtos", padrão do script de imagens); falta só preencher `SUPABASE_SERVICE_ROLE_KEY` no `.env`/Vercel (vazia hoje — pendência da Fase 1). Sem a chave, o form mostra erro limpo em vez de quebrar_
+- [x] Excluir produto · P — _com confirmação_
+- [x] Marcar produto **ativo/esgotado** · P — _toggles na lista_
+- [x] **Edição rápida de preço** · P — _input inline na lista_
+- [x] CRUD de **categorias** · M — _lista (ordem editável inline + toggle ativa), criar/editar (form compartilhado, slug auto), excluir bloqueado se houver produtos; revalida a vitrine_
+- [x] **Listagem de pedidos** recebidos (data, itens, total, cliente) · M — _lista + detalhe + mudar status (enum `StatusPedido`)_
+- [x] Configurações da loja (horário, mínimo, área) · M — _`/admin/configuracoes` edita o singleton `ConfigLoja` (nome, **WhatsApp**, telefone, endereço, pedido mínimo, área, aberta); reflete em `/loja` e no checkout_
+- [x] **Marco:** dono cadastra/edita produto e vê pedidos sem depender de ninguém — _alcançado (produtos, categorias, pedidos e config da loja pelo painel); upload de imagem depende da service key_
 
 ## Épico 4 — Polimento & Demo (Fase 4)
 

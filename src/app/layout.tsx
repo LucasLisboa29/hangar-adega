@@ -2,10 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
 
-import { CartProvider } from "@/components/cart/cart-provider";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
-
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -36,12 +32,8 @@ export default function RootLayout({
       lang="pt-BR"
       className={`dark ${inter.variable} ${oswald.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
-        <CartProvider>
-          <SiteHeader />
-          <main className="flex-1">{children}</main>
-          <SiteFooter />
-        </CartProvider>
+      <body className="flex min-h-full flex-col bg-background text-foreground">
+        {children}
       </body>
     </html>
   );
