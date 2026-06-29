@@ -60,8 +60,12 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
 
 ## Estado atual do projeto
 
-- **Fase atual:** 4 — Polimento & Demo **EM ANDAMENTO** 🚧 (Épico 3 já fechado). Primeira leva da
-  Fase 4 feita (ver abaixo); ainda faltam itens que dependem do dono e revisão de UX/responsividade.
+- **Fase atual:** 4 — Polimento & Demo **CONCLUÍDA** ✅ (Marco "DEMO no ar, pronta pra apresentar"
+  atingido). Próxima é a **Fase 5** (backlog/pós-validação — ver [quebra-de-tarefas.md](quebra-de-tarefas.md)).
+  **Itens que sobraram são todos dependentes do dono** (não bloqueiam a demo): **preços reais** (hoje
+  estimados — decisão do Lucas de manter), **número real do WhatsApp** (hoje o nº de teste do Lucas) e
+  **URL/domínio próprio** (hoje `hangar-adega.vercel.app`, decisão de manter). Loja + admin no ar,
+  responsivos, testados no celular, com pedido fim-a-fim funcionando (testado pelo Lucas em 2026-06-29).
 - **No ar:** https://hangar-adega.vercel.app (deploy contínuo a cada push na `main`)
 - **Concluído na Fase 4 (primeira leva — sessão de 2026-06-28):** (1) **Seção de Destaques na home**:
   `getProdutosDestaque` em `src/lib/catalog.ts` + componente `<Destaques>` no topo de `(site)/page.tsx`
@@ -187,20 +191,19 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
   `/produtos/...` (bloco acima): agora que o bucket existe, dá pra rodar `npm run db:imagens` sem
   `--dry` p/ subir de verdade — tarefa da Fase 4.)
 
-### Para retomar na próxima sessão (Fase 4 — Polimento & Demo)
+### Para retomar na próxima sessão (Fase 5 — Backlog / pós-validação)
 
 1. **Subir o ambiente:** `npm install` → `npm run dev` → http://localhost:3000 (`.env` já conecta ao Supabase).
    Admin: `/admin/login` (rodar `npm run admin:criar` se precisar (re)criar o usuário; lê `ADMIN_*` do `.env`).
-2. **Épico 3 está fechado.** Próxima é a **Fase 4** (ver [quebra-de-tarefas.md](quebra-de-tarefas.md)):
-   mais produtos reais + fotos, seção de destaques na home, revisão de UX/responsividade, SEO
-   básico/favicon, teste do fluxo no celular, URL apresentável e roteiro de apresentação pro dono.
-3. **Pendências que valem fechar antes da demo:**
-   - **WhatsApp real:** quando houver o número do dono, é só preencher em `/admin/configuracoes`.
-   - **Fotos reais dos produtos:** rodar `npm run db:imagens` (sem `--dry`) p/ subir as 19 fotos pro
-     bucket `produtos` (hoje a `imagemUrl` aponta pra caminhos locais que não existem no Vercel) +
-     curar as ~14 faltantes.
-   - **(✅ Deploy/env já resolvido):** `SESSION_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`,
-     `NEXT_PUBLIC_SUPABASE_URL` e `DATABASE_URL` corretos na Vercel; bucket `produtos` criado.
+2. **Fases 0–4 fechadas.** A **demo está no ar e testada no celular**. A próxima é a **Fase 5**
+   (backlog/pós-validação — ver lista em [quebra-de-tarefas.md](quebra-de-tarefas.md)): combos/"leve junto",
+   promoções, filtro por faixa de preço, indicador de loja aberta/fechada por horário, pagamento online
+   (Pix/cartão via gateway), conta do cliente + histórico, PWA, importação de catálogo por planilha,
+   domínio próprio + LGPD, e (estratégico) evoluir pra SaaS multi-loja. **Escolher com o Lucas o que
+   priorizar** — várias dessas idealmente entram após validação com o dono, mas valem como portfólio.
+3. **Pendências que dependem do dono (não bloqueiam a demo):** número real do WhatsApp e preços reais
+   (hoje nº de teste do Lucas + preços estimados, ambos editáveis em `/admin/configuracoes` e no admin),
+   logo em alta, domínio próprio.
 4. **Lembrete da stack:** Next 16 / Tailwind v4 / Prisma 7 têm breaking changes — antes de
    escrever código, consultar os guias em `node_modules/next/dist/docs/` (ver [AGENTS.md](AGENTS.md)).
    **Importante:** depois de `prisma migrate dev`, rode `npx prisma generate` e reinicie o dev

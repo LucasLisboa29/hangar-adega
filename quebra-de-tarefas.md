@@ -78,9 +78,11 @@
 - [x] Teste manual do fluxo completo (loja + admin) no celular · P — _loja (home→produto→carrinho→checkout→+18)
   e **admin** (login, visão geral, produtos lista+form, pedidos lista+detalhe, categorias, configurações)
   testados a 375px. Bug corrigido: a nav do admin causava scroll horizontal → `flex-wrap` em `admin-nav.tsx`_
-- [ ] Ajustar domínio provisório / URL apresentável · P
+- [~] Ajustar domínio provisório / URL apresentável · P — _`hangar-adega.vercel.app` mantida por ora
+  (decisão do Lucas); domínio próprio fica pra quando houver contato com o dono_
 - [x] Escrever **roteiro de apresentação** pro dono (ganhos vs. HeroDelivery) · P — _[roteiro-apresentacao.md](roteiro-apresentacao.md)_
-- [ ] **Marco:** DEMO no ar, pronta para apresentar ao dono da Hangar
+- [x] **Marco:** DEMO no ar, pronta para apresentar ao dono da Hangar — _loja + admin no ar, responsivos,
+  testados no celular (2026-06-29), com pedido fim-a-fim funcionando (WhatsApp de teste do Lucas)_
 
 ---
 
