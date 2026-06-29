@@ -28,20 +28,20 @@ export function ProductCard({ produto }: { produto: ProdutoCard }) {
         "hover:border-primary/50 focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-ring/50 outline-none"
       )}
     >
-      {/* Imagem (ou placeholder dourado enquanto não há foto real) */}
-      <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-accent to-card">
+      {/* Imagem em tile branco (estilo catálogo); placeholder claro quando sem foto */}
+      <div className="relative aspect-square overflow-hidden bg-white">
         {produto.imagemUrl ? (
           <Image
             src={produto.imagemUrl}
             alt={produto.nome}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover transition-transform group-hover:scale-105"
+            className="object-contain p-3 transition-transform group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full items-center justify-center">
             <Wine
-              className="size-12 text-primary/30 transition-transform group-hover:scale-110"
+              className="size-12 text-black/15 transition-transform group-hover:scale-110"
               strokeWidth={1.25}
             />
           </div>

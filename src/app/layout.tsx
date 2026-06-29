@@ -14,12 +14,34 @@ const oswald = Oswald({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://hangar-adega.vercel.app"),
   title: {
     default: "Hangar Bebidas — Adega e Conveniência em Araguari-MG",
     template: "%s · Hangar Bebidas",
   },
   description:
     "Bebidas, cigarros e conveniência com entrega em Uberlândia e Araguari. Peça pelo nosso catálogo online. Desde 2009.",
+  keywords: [
+    "adega",
+    "bebidas",
+    "delivery de bebidas",
+    "Araguari",
+    "Uberlândia",
+    "cervejas",
+    "vinhos",
+    "destilados",
+    "conveniência",
+    "Hangar Bebidas",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: "Hangar Bebidas",
+    title: "Hangar Bebidas — Adega e Conveniência em Araguari-MG",
+    description:
+      "Bebidas, cigarros e conveniência com entrega em Uberlândia e Araguari. Peça pelo nosso catálogo online. Desde 2009.",
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({

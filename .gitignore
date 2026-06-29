@@ -44,6 +44,9 @@ Conteudo adicional/
 # imagens de produto geradas localmente (modo --dry); o destino final é o Supabase Storage
 /public/produtos/
 
+# fotos-fonte curadas (fundo branco) p/ padronizar; o destino final é o Supabase Storage
+/imagens-fonte/
+
 # vercel
 .vercel
 

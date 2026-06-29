@@ -1,4 +1,4 @@
-import { SearchX } from "lucide-react";
+import { SearchX, Star } from "lucide-react";
 
 import { CategoryPills } from "@/components/category-pills";
 import { ProductCard } from "@/components/product-card";
@@ -6,6 +6,7 @@ import {
   buscarProdutos,
   getCategorias,
   getCategoriasComProdutos,
+  getProdutosDestaque,
 } from "@/lib/catalog";
 
 export default async function Home({
@@ -42,9 +43,32 @@ export default async function Home({
       {filtrando ? (
         <ResultadosFiltrados q={termoBusca} categoriaSlug={categoria} />
       ) : (
-        <CatalogoPorCategoria />
+        <>
+          <Destaques />
+          <CatalogoPorCategoria />
+        </>
       )}
     </div>
+  );
+}
+
+async function Destaques() {
+  const produtos = await getProdutosDestaque();
+
+  if (produtos.length === 0) return null;
+
+  return (
+    <section className="mb-10">
+      <h2 className="mb-3 flex items-center gap-2 font-heading text-xl font-semibold uppercase tracking-tight text-foreground">
+        <Star className="size-5 fill-primary text-primary" />
+        Destaques
+      </h2>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        {produtos.map((produto) => (
+          <ProductCard key={produto.id} produto={produto} />
+        ))}
+      </div>
+    </section>
   );
 }
 

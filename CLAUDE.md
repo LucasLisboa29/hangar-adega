@@ -60,9 +60,48 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
 
 ## Estado atual do projeto
 
-- **Fase atual:** 3 — Painel Admin **CONCLUÍDA** ✅ (Épico 3 fechado) → próxima é a Fase 4
-  (Polimento & Demo). Única pendência técnica do épico: `SUPABASE_SERVICE_ROLE_KEY` p/ upload.
+- **Fase atual:** 4 — Polimento & Demo **EM ANDAMENTO** 🚧 (Épico 3 já fechado). Primeira leva da
+  Fase 4 feita (ver abaixo); ainda faltam itens que dependem do dono e revisão de UX/responsividade.
 - **No ar:** https://hangar-adega.vercel.app (deploy contínuo a cada push na `main`)
+- **Concluído na Fase 4 (primeira leva — sessão de 2026-06-28):** (1) **Seção de Destaques na home**:
+  `getProdutosDestaque` em `src/lib/catalog.ts` + componente `<Destaques>` no topo de `(site)/page.tsx`
+  (só quando não há filtro/busca; usa `produto.destaque`, máx. 8). (2) **SEO básico**: `metadataBase`,
+  OpenGraph, `keywords` e `robots` na metadata raiz (`src/app/layout.tsx`); OpenGraph + `canonical` +
+  imagem por produto no `generateMetadata` de `produto/[slug]` (favicon já existia em `src/app/favicon.ico`).
+  (3) **Roteiro de apresentação pro dono** em `roteiro-apresentacao.md` (demo loja+painel, ganhos vs.
+  HeroDelivery, FAQ). Verificado no preview (Destaques rendeiza, sem erro de console); `npm run build`
+  limpo (SSG dos 33 produtos intacto). **Pendentes da Fase 4:** correção de preços, URL apresentável,
+  admin no mobile, e WhatsApp real (depende do dono — setar em `/admin/configuracoes`).
+- **Concluído na Fase 4 (segunda leva — sessão de 2026-06-29):** (1) **Revisão de UX/responsividade**:
+  fluxo da loja testado em mobile (375px) e desktop — home, produto, carrinho (drawer + stepper + aviso
+  de mínimo), checkout (pagamento/troco/+18), /loja, 404; sem bug de layout nem erro de console. (Falta
+  só passar o **admin no mobile**.) (2) **Imagens repensadas (decisão do Lucas):** o card e a página de
+  produto agora usam **tile branco + `object-contain`** (estilo catálogo) em vez do fundo escuro com
+  produto recortado "flutuando"; placeholder virou ícone cinza sutil no branco. As auto-imagens do Open
+  Food Facts (qualidade ruim: mão segurando garrafa, artefatos de recorte) foram **descartadas** e a
+  `imagemUrl` foi **zerada nos 33 produtos** (`npm run db:imagens:padronizar -- --limpar`) → produção
+  mostra placeholder limpo em vez de imagem quebrada. **Novo pipeline de imagens** em
+  `scripts/padronizar-imagens.ts` (`npm run db:imagens:padronizar`): NÃO remove fundo (fotos já vêm com
+  fundo branco) — apenas apara a borda branca (`sharp.trim`), centraliza num canvas quadrado branco
+  uniforme e sobe pro Supabase. O script antigo `produtos-imagens.ts` (fluxo transparente, remove fundo
+  via ONNX) continua existindo mas foi aposentado. Verificado no preview + `npm run build` limpo.
+- **✅ Fotos reais dos 33 produtos no ar (sessão de 2026-06-29):** o Lucas curou fotos de **fundo branco**
+  de **todos os 33 produtos**, colocou em `imagens-fonte/` (gitignored, nome do arquivo = slug) e rodou
+  `npm run db:imagens:padronizar` → as fotos foram padronizadas (quadrado branco uniforme) e subidas pro
+  Supabase Storage, com a `imagemUrl` gravada nos 33. **A loja agora tem catálogo de fotos reais completo**
+  (placeholder não aparece mais). O checklist em `imagens-fonte/README.md` (33/33) é a fonte do que foi
+  subido; pra trocar/atualizar uma foto, é só repor o arquivo na pasta e rodar de novo (`upsert`) ou usar
+  o upload do painel em `/admin/produtos`.
+- **⚙️ Deploy/infra da Fase 3 — TUDO RESOLVIDO (sessão de 2026-06-28):** o painel admin agora roda
+  em produção. (1) **Deploys estavam quebrando em silêncio há 3 dias:** o `DATABASE_URL` na **Vercel**
+  estava com credencial **desatualizada** (a senha do Postgres mudou no Supabase; o `.env` local foi
+  atualizado, a Vercel não) → o build falhava no SSG de `/produto/[slug]` com `P1000` (auth failed).
+  O site no ar estava congelado no `9f04172` (Fase 0). Corrigido colando o `DATABASE_URL`/`DIRECT_URL`
+  certos na Vercel. (2) **Env vars do admin setadas na Vercel:** `SESSION_SECRET` (login no ar ✅),
+  `SUPABASE_SERVICE_ROLE_KEY` e **`NEXT_PUBLIC_SUPABASE_URL`** (essa faltava — sem ela `getClient()` em
+  `storage.ts` devolvia null → "Storage não configurado"). (3) **Bucket `produtos` criado** (público)
+  no Supabase Storage — antes nunca existira (pipeline da Fase 1 rodou só `--dry`); sem ele o upload
+  dava `Bucket not found`. **Upload de imagem do admin testado e funcionando em produção.**
 - **Concluído na Fase 3 (categorias + config — leva final):** **CRUD de categorias**
   (`/admin/categorias`: lista com ordem editável inline + toggle ativa; criar/editar via form
   compartilhado com slug auto; excluir **bloqueado** quando a categoria tem produtos — trava na
@@ -87,11 +126,9 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
   `src/lib/storage.ts`. Helpers `slugify`/`parseReaisParaCentavos`/`centavosParaInput` em `format.ts`.
   Sem migration (modelos já existiam). Verificado fim-a-fim no preview (gate, login, CRUD, revalidate
   na home, pedido criado→listado→status mudado, logout); `npm run build` limpo (SSG dos produtos intacto).
-- **⚠️ Upload de imagem do admin depende da `SUPABASE_SERVICE_ROLE_KEY`** (hoje **vazia** no `.env`
-  — pendência herdada da Fase 1). O caminho está fiado e correto (bucket "produtos"); sem a chave o
-  form mostra "Storage não configurado" em vez de quebrar. Preencher no `.env` e na Vercel para ativar.
-- **⚠️ Nova env var:** `SESSION_SECRET` (segredo do cookie de admin) — está no `.env` local; **setar
-  também na Vercel** antes do deploy, senão o login do admin quebra em produção.
+- **✅ Upload de imagem do admin:** RESOLVIDO. `SUPABASE_SERVICE_ROLE_KEY` preenchida no `.env` local
+  e na Vercel; bucket `produtos` público criado no Supabase Storage. Funciona local e em produção.
+- **✅ `SESSION_SECRET`:** RESOLVIDO. Setada na Vercel (Production+Preview); login do admin no ar funciona.
 - **Concluído na Fase 2:** carrinho client-side (`CartProvider` — Context+reducer, persistido em
   `localStorage` `hangar.carrinho.v1`); adicionar pela página do produto (`AddToCartButton` vira
   stepper) e pelo "+" nos cards (`QuickAddButton`); **drawer** do carrinho (`ui/sheet.tsx` sobre
@@ -135,8 +172,11 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
   `SUPABASE_SERVICE_ROLE_KEY` + bucket público "produtos") ANTES de publicar, senão o site no
   ar fica com imagens quebradas.
 - **Pendências conhecidas:** curadoria das ~14 fotos faltantes (EAN/manual) e upload pro
-  Supabase Storage; WhatsApp placeholder (acima); `SUPABASE_SERVICE_ROLE_KEY` vazia (trava o
-  upload de imagem do admin). O painel já lista/gerencia produtos e pedidos.
+  Supabase Storage; WhatsApp placeholder (acima). O painel já lista/gerencia produtos e pedidos.
+  **(Resolvido:** `SUPABASE_SERVICE_ROLE_KEY` agora preenchida e bucket `produtos` criado — o
+  upload de imagem do admin funciona. As 19 fotos do `--dry` ainda apontam pra caminhos LOCAIS
+  `/produtos/...` (bloco acima): agora que o bucket existe, dá pra rodar `npm run db:imagens` sem
+  `--dry` p/ subir de verdade — tarefa da Fase 4.)
 
 ### Para retomar na próxima sessão (Fase 4 — Polimento & Demo)
 
@@ -146,10 +186,12 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
    mais produtos reais + fotos, seção de destaques na home, revisão de UX/responsividade, SEO
    básico/favicon, teste do fluxo no celular, URL apresentável e roteiro de apresentação pro dono.
 3. **Pendências que valem fechar antes da demo:**
-   - **Upload de imagem do admin:** preencher `SUPABASE_SERVICE_ROLE_KEY` no `.env` e na Vercel
-     (`src/lib/storage.ts` já está pronto; sem a chave dá erro limpo).
    - **WhatsApp real:** quando houver o número do dono, é só preencher em `/admin/configuracoes`.
-   - **Antes do deploy:** setar `SESSION_SECRET` (e `SUPABASE_SERVICE_ROLE_KEY`) nas env vars da Vercel.
+   - **Fotos reais dos produtos:** rodar `npm run db:imagens` (sem `--dry`) p/ subir as 19 fotos pro
+     bucket `produtos` (hoje a `imagemUrl` aponta pra caminhos locais que não existem no Vercel) +
+     curar as ~14 faltantes.
+   - **(✅ Deploy/env já resolvido):** `SESSION_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`,
+     `NEXT_PUBLIC_SUPABASE_URL` e `DATABASE_URL` corretos na Vercel; bucket `produtos` criado.
 4. **Lembrete da stack:** Next 16 / Tailwind v4 / Prisma 7 têm breaking changes — antes de
    escrever código, consultar os guias em `node_modules/next/dist/docs/` (ver [AGENTS.md](AGENTS.md)).
    **Importante:** depois de `prisma migrate dev`, rode `npx prisma generate` e reinicie o dev

@@ -17,6 +17,16 @@ export async function getCategoriasComProdutos() {
   });
 }
 
+/** Produtos em destaque (ativos, não esgotados) para a vitrine da home. */
+export async function getProdutosDestaque(limite = 8) {
+  return prisma.produto.findMany({
+    where: { ativo: true, esgotado: false, destaque: true },
+    orderBy: { nome: "asc" },
+    take: limite,
+    include: { categoria: { select: { nome: true, slug: true } } },
+  });
+}
+
 /** Só as categorias ativas (para a navegação/filtro). */
 export async function getCategorias() {
   return prisma.categoria.findMany({

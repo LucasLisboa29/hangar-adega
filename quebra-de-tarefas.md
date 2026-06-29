@@ -67,13 +67,17 @@
 
 ## Épico 4 — Polimento & Demo (Fase 4)
 
-- [ ] Cadastrar mais produtos reais (corrigir fotos faltando e preços R$ 0,00 do site atual) · M
-- [ ] Seção de destaques na home · P
-- [ ] Revisão geral de UX/UI e responsividade · M
-- [ ] SEO básico (títulos, meta tags por produto/categoria), favicon · P
-- [ ] Teste manual do fluxo completo (loja + admin) no celular · P
+- [~] Cadastrar mais produtos reais (corrigir fotos faltando e preços R$ 0,00 do site atual) · M
+  — _**fotos:** ✅ os 33 produtos agora têm **foto real de fundo branco** no tile branco (catálogo).
+  Auto-imagens do Open Food Facts descartadas; Lucas curou as fotos em `imagens-fonte/` e subiu via
+  `npm run db:imagens:padronizar` (`scripts/padronizar-imagens.ts`). **Pendente ainda:** revisar preços
+  e, se for o caso, cadastrar produtos extras._
+- [x] Seção de destaques na home · P — _`getProdutosDestaque` + `<Destaques>` no topo da home (só sem filtro); usa `produto.destaque`_
+- [x] Revisão geral de UX/UI e responsividade · M — _passada em mobile (375px) e desktop: home, produto, /loja, 404; sem bug de layout nem erro de console_
+- [x] SEO básico (títulos, meta tags por produto/categoria), favicon · P — _`metadataBase`+OpenGraph+keywords+robots na raiz; OG/canonical/imagem por produto; favicon já existia_
+- [~] Teste manual do fluxo completo (loja + admin) no celular · P — _loja testada no celular (home→produto→carrinho→checkout→+18); falta passar o admin no mobile_
 - [ ] Ajustar domínio provisório / URL apresentável · P
-- [ ] Escrever **roteiro de apresentação** pro dono (ganhos vs. HeroDelivery) · P
+- [x] Escrever **roteiro de apresentação** pro dono (ganhos vs. HeroDelivery) · P — _[roteiro-apresentacao.md](roteiro-apresentacao.md)_
 - [ ] **Marco:** DEMO no ar, pronta para apresentar ao dono da Hangar
 
 ---

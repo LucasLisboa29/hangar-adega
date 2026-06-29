@@ -22,11 +22,22 @@ export async function generateMetadata({
   const produto = await getProdutoPorSlug(slug);
   if (!produto) return { title: "Produto não encontrado" };
 
+  const descricao =
+    produto.descricao ??
+    `${produto.nome} — ${produto.categoria.nome} na Hangar Bebidas. ${formatBRL(
+      produto.precoCentavos
+    )}.`;
+
   return {
     title: produto.nome,
-    description:
-      produto.descricao ??
-      `${produto.nome} — ${produto.categoria.nome} na Hangar Bebidas.`,
+    description: descricao,
+    alternates: { canonical: `/produto/${produto.slug}` },
+    openGraph: {
+      type: "website",
+      title: produto.nome,
+      description: descricao,
+      ...(produto.imagemUrl ? { images: [produto.imagemUrl] } : {}),
+    },
   };
 }
 
@@ -49,8 +60,8 @@ export default async function ProdutoPage({
       </Link>
 
       <div className="grid gap-8 sm:grid-cols-2">
-        {/* Imagem */}
-        <div className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-accent to-card">
+        {/* Imagem em tile branco (estilo catálogo) */}
+        <div className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-white">
           {produto.imagemUrl ? (
             <Image
               src={produto.imagemUrl}
@@ -58,11 +69,11 @@ export default async function ProdutoPage({
               fill
               priority
               sizes="(max-width: 640px) 100vw, 50vw"
-              className="object-cover"
+              className="object-contain p-6"
             />
           ) : (
             <div className="flex h-full items-center justify-center">
-              <Wine className="size-24 text-primary/25" strokeWidth={1} />
+              <Wine className="size-24 text-black/15" strokeWidth={1} />
             </div>
           )}
           {produto.esgotado && (
