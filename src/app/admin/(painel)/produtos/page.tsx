@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 
 import { listarProdutosAdmin } from "@/lib/admin/produtos";
-import { centavosParaInput } from "@/lib/format";
+import { centavosParaInput, formatBRL, emOferta, descontoPercentual } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmButton } from "@/components/admin/confirm-button";
@@ -69,6 +69,12 @@ export default async function ProdutosAdminPage() {
                       Salvar
                     </Button>
                   </form>
+                  {emOferta(p) && (
+                    <p className="mt-1 text-xs text-red-500">
+                      Oferta: {formatBRL(p.precoPromoCentavos!)} (-
+                      {descontoPercentual(p)}%)
+                    </p>
+                  )}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1.5">

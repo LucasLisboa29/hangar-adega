@@ -7,7 +7,12 @@ import { ArrowLeft, Wine } from "lucide-react";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { Badge } from "@/components/ui/badge";
 import { getProdutoPorSlug, getSlugsDeProdutos } from "@/lib/catalog";
-import { formatBRL } from "@/lib/format";
+import {
+  formatBRL,
+  emOferta,
+  precoEfetivoCentavos,
+  descontoPercentual,
+} from "@/lib/format";
 
 // Gera as páginas de produto estaticamente a partir do catálogo.
 export async function generateStaticParams() {
@@ -25,7 +30,7 @@ export async function generateMetadata({
   const descricao =
     produto.descricao ??
     `${produto.nome} — ${produto.categoria.nome} na Hangar Bebidas. ${formatBRL(
-      produto.precoCentavos
+      precoEfetivoCentavos(produto)
     )}.`;
 
   return {
@@ -48,6 +53,9 @@ export default async function ProdutoPage({
   const produto = await getProdutoPorSlug(slug);
 
   if (!produto || !produto.ativo) notFound();
+
+  const oferta = emOferta(produto);
+  const precoEfetivo = precoEfetivoCentavos(produto);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-6">
@@ -95,9 +103,21 @@ export default async function ProdutoPage({
             {produto.nome}
           </h1>
 
-          <p className="mt-3 font-heading text-3xl font-bold text-primary">
-            {formatBRL(produto.precoCentavos)}
-          </p>
+          <div className="mt-3 flex flex-wrap items-baseline gap-3">
+            <p className="font-heading text-3xl font-bold text-primary">
+              {formatBRL(precoEfetivo)}
+            </p>
+            {oferta && (
+              <>
+                <p className="text-lg text-muted-foreground line-through">
+                  {formatBRL(produto.precoCentavos)}
+                </p>
+                <Badge className="border-transparent bg-red-600 text-white">
+                  -{descontoPercentual(produto)}%
+                </Badge>
+              </>
+            )}
+          </div>
 
           {produto.descricao && (
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -111,7 +131,7 @@ export default async function ProdutoPage({
                 id: produto.id,
                 slug: produto.slug,
                 nome: produto.nome,
-                precoCentavos: produto.precoCentavos,
+                precoCentavos: precoEfetivo,
                 imagemUrl: produto.imagemUrl,
               }}
               disabled={produto.esgotado}

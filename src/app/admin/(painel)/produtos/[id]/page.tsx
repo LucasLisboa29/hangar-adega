@@ -28,6 +28,7 @@ export default async function EditarProdutoPage({
           nome: produto.nome,
           descricao: produto.descricao,
           precoCentavos: produto.precoCentavos,
+          precoPromoCentavos: produto.precoPromoCentavos,
           categoriaId: produto.categoriaId,
           imagemUrl: produto.imagemUrl,
           ativo: produto.ativo,

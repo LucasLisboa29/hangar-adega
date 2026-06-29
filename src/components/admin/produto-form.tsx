@@ -15,6 +15,7 @@ type ProdutoEdicao = {
   nome: string;
   descricao: string | null;
   precoCentavos: number;
+  precoPromoCentavos: number | null;
   categoriaId: string;
   imagemUrl: string | null;
   ativo: boolean;
@@ -62,6 +63,28 @@ export function ProdutoForm({
           />
         </div>
 
+        <div className="space-y-1.5">
+          <label htmlFor="precoPromo" className="text-sm font-medium">
+            Preço em oferta (R$)
+          </label>
+          <Input
+            id="precoPromo"
+            name="precoPromo"
+            inputMode="decimal"
+            placeholder="opcional"
+            defaultValue={
+              produto?.precoPromoCentavos != null
+                ? centavosParaInput(produto.precoPromoCentavos)
+                : ""
+            }
+          />
+          <p className="text-xs text-muted-foreground">
+            Deixe em branco para não estar em oferta. Precisa ser menor que o preço.
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
         <div className="space-y-1.5">
           <label htmlFor="categoriaId" className="text-sm font-medium">
             Categoria

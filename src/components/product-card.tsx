@@ -4,7 +4,12 @@ import { Wine } from "lucide-react";
 
 import { QuickAddButton } from "@/components/quick-add-button";
 import { Badge } from "@/components/ui/badge";
-import { formatBRL } from "@/lib/format";
+import {
+  formatBRL,
+  emOferta,
+  precoEfetivoCentavos,
+  descontoPercentual,
+} from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 // Campos mínimos que o card precisa — assim aceita tanto o retorno do
@@ -14,12 +19,16 @@ type ProdutoCard = {
   slug: string;
   nome: string;
   precoCentavos: number;
+  precoPromoCentavos: number | null;
   imagemUrl: string | null;
   esgotado: boolean;
   destaque: boolean;
 };
 
 export function ProductCard({ produto }: { produto: ProdutoCard }) {
+  const oferta = emOferta(produto);
+  const precoEfetivo = precoEfetivoCentavos(produto);
+
   return (
     <Link
       href={`/produto/${produto.slug}`}
@@ -47,8 +56,15 @@ export function ProductCard({ produto }: { produto: ProdutoCard }) {
           </div>
         )}
 
-        {produto.destaque && !produto.esgotado && (
-          <Badge className="absolute left-2 top-2">Destaque</Badge>
+        {!produto.esgotado && (oferta || produto.destaque) && (
+          <div className="absolute left-2 top-2 flex flex-col items-start gap-1">
+            {oferta && (
+              <Badge className="border-transparent bg-red-600 text-white">
+                -{descontoPercentual(produto)}%
+              </Badge>
+            )}
+            {produto.destaque && <Badge>Destaque</Badge>}
+          </div>
         )}
         {produto.esgotado && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-[1px]">
@@ -62,7 +78,7 @@ export function ProductCard({ produto }: { produto: ProdutoCard }) {
               id: produto.id,
               slug: produto.slug,
               nome: produto.nome,
-              precoCentavos: produto.precoCentavos,
+              precoCentavos: precoEfetivo,
               imagemUrl: produto.imagemUrl,
             }}
           />
@@ -74,9 +90,16 @@ export function ProductCard({ produto }: { produto: ProdutoCard }) {
         <h3 className="line-clamp-2 text-sm font-medium leading-snug text-foreground">
           {produto.nome}
         </h3>
-        <p className="mt-auto pt-1 font-heading text-lg font-semibold text-primary">
-          {formatBRL(produto.precoCentavos)}
-        </p>
+        <div className="mt-auto flex items-baseline gap-2 pt-1">
+          <p className="font-heading text-lg font-semibold text-primary">
+            {formatBRL(precoEfetivo)}
+          </p>
+          {oferta && (
+            <p className="text-xs text-muted-foreground line-through">
+              {formatBRL(produto.precoCentavos)}
+            </p>
+          )}
+        </div>
       </div>
     </Link>
   );

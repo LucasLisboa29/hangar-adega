@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { precoEfetivoCentavos } from "@/lib/format";
 import { PEDIDO_MINIMO_CENTAVOS, WHATSAPP_PLACEHOLDER } from "@/lib/loja";
 import {
   linkWhatsApp,
@@ -68,7 +69,8 @@ export async function criarPedido(
       return {
         produtoId: produto.id,
         nomeProduto: produto.nome,
-        precoCentavos: produto.precoCentavos,
+        // Preço autoritativo: o promocional quando em oferta, senão o cheio.
+        precoCentavos: precoEfetivoCentavos(produto),
         quantidade,
       };
     })

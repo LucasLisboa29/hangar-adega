@@ -89,7 +89,10 @@
 ## Backlog / Ideias futuras (Fase 5 — pós-validação)
 
 - Combos / "leve junto" e sugestões de itens relacionados
-- Promoções e marcação de produto em oferta
+- [x] Promoções e marcação de produto em oferta — `Produto.precoPromoCentavos`
+  (opcional, < preço); selo "-N%" + preço riscado nos cards e na página de produto,
+  seção "Ofertas" na home, preço efetivo no carrinho e revalidado no checkout, e
+  campo "Preço em oferta" no admin
 - Filtro por faixa de preço
 - [x] Indicador de loja aberta/fechada conforme horário — grade semanal em
   `ConfigLoja.horarios` (fuso America/Sao_Paulo, com virada de meia-noite),

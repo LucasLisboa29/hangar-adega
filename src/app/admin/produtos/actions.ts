@@ -54,6 +54,20 @@ export async function salvarProduto(
     return { erro: "Preço inválido. Use o formato 19,90." };
   }
 
+  // Preço de oferta: opcional. Em branco = sem oferta (null). Se preenchido,
+  // precisa ser válido e MENOR que o preço cheio.
+  const precoPromoStr = String(formData.get("precoPromo") ?? "").trim();
+  let precoPromoCentavos: number | null = null;
+  if (precoPromoStr) {
+    precoPromoCentavos = parseReaisParaCentavos(precoPromoStr);
+    if (precoPromoCentavos === null) {
+      return { erro: "Preço em oferta inválido. Use o formato 14,90." };
+    }
+    if (precoPromoCentavos >= precoCentavos) {
+      return { erro: "O preço em oferta precisa ser menor que o preço normal." };
+    }
+  }
+
   // Slug: gerado no cadastro; preservado na edição (evita quebrar links/SSG).
   let slug: string;
   if (id) {
@@ -78,6 +92,7 @@ export async function salvarProduto(
     descricao,
     categoriaId,
     precoCentavos,
+    precoPromoCentavos,
     ativo,
     esgotado,
     destaque,

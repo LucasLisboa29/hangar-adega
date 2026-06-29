@@ -30,6 +30,10 @@ model Produto {
   slug          String       @unique
   descricao     String?
   precoCentavos Int
+  // Preço promocional (oferta). Quando preenchido E menor que precoCentavos, o
+  // produto está "em oferta": a loja mostra o preço cheio riscado + este, e o
+  // checkout cobra este valor. null = sem oferta.
+  precoPromoCentavos Int?
   imagemUrl     String?
   ativo         Boolean      @default(true)
   esgotado      Boolean      @default(false)

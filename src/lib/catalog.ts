@@ -27,6 +27,19 @@ export async function getProdutosDestaque(limite = 8) {
   });
 }
 
+/** Produtos em oferta (ativos, não esgotados, com promo válida) para a home. */
+export async function getProdutosEmOferta(limite = 8) {
+  const produtos = await prisma.produto.findMany({
+    where: { ativo: true, esgotado: false, precoPromoCentavos: { not: null } },
+    orderBy: { nome: "asc" },
+    include: { categoria: { select: { nome: true, slug: true } } },
+  });
+  // O Prisma não compara duas colunas no `where`; garante promo < preço aqui.
+  return produtos
+    .filter((p) => p.precoPromoCentavos! < p.precoCentavos)
+    .slice(0, limite);
+}
+
 /** Só as categorias ativas (para a navegação/filtro). */
 export async function getCategorias() {
   return prisma.categoria.findMany({

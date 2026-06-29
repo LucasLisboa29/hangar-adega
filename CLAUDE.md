@@ -84,6 +84,20 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
   próxima abertura/override/madrugada), `npm run build` limpo (SSG dos 33 produtos intacto). **Gotcha:**
   `prisma migrate dev` NÃO regenerou o client no output custom (`src/generated/prisma`) — precisou de
   `npx prisma generate` à parte antes do build enxergar `ConfigLoja.horarios`.
+- **✅ Fase 5 — Promoções / produto em oferta (sessão de 2026-06-29):** segundo item do backlog.
+  (1) **Modelo:** novo campo `Produto.precoPromoCentavos` (`Int?`, migration `add_preco_promo`).
+  Regra de oferta centralizada em `src/lib/format.ts` (`emOferta`, `precoEfetivoCentavos`,
+  `descontoPercentual`): em oferta quando a promo está preenchida E é menor que o preço cheio.
+  (2) **Vitrine:** selo vermelho "-N%" + preço cheio riscado nos cards (`product-card.tsx`) e na
+  página de produto; nova seção **"Ofertas"** na home (`getProdutosEmOferta` — filtra promo < preço
+  em JS porque o Prisma não compara duas colunas no `where`). (3) **Carrinho/checkout:** o card e a
+  página passam o **preço efetivo** ao carrinho; o `criarPedido` (que já revalida tudo no servidor)
+  agora usa `precoEfetivoCentavos` do produto do banco → a oferta é honrada e **à prova de
+  adulteração** (o cliente só manda id+quantidade). (4) **Admin:** campo "Preço em oferta" no
+  `produto-form.tsx` (opcional; valida promo < preço na action, em branco = sem oferta) + indicador
+  de oferta na lista de produtos. Verificado no preview (home/produto/carrinho com a promo, subtotal
+  com preço de oferta, sem erro de console); `npm run build` limpo (SSG dos 33 produtos intacto).
+  **Há uma oferta de teste (-30%) na Heineken** semeada p/ demo — remover/ajustar em `/admin/produtos`.
 - **No ar:** https://hangar-adega.vercel.app (deploy contínuo a cada push na `main`)
 - **Concluído na Fase 4 (primeira leva — sessão de 2026-06-28):** (1) **Seção de Destaques na home**:
   `getProdutosDestaque` em `src/lib/catalog.ts` + componente `<Destaques>` no topo de `(site)/page.tsx`
