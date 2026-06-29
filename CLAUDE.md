@@ -60,6 +60,30 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
 
 ## Estado atual do projeto
 
+- **🔧 Modo atual — REFINAMENTO DIRIGIDO PELO LUCAS (desde 2026-06-29):** com o app estruturado
+  (Fases 0–5, leva inicial), o Lucas entrou na etapa combinada desde o começo: **ele testa o app
+  pronto e pede ajustes** (acrescentar, mover, mudar design/UX). Trabalhar **por etapas, uma de cada
+  vez**, e **ao final de cada uma perguntar se ele quer mais**. Pedido de tela/design → **gerar mockup
+  antes de codar**. Decisão final de UX é dele. **1ª leva (home, em andamento):** (1) mais complexidade
+  na home (não só vitrine agrupada); (2) subtítulo "ADEGA & CONVENIÊNCIA · ARAGUARI-MG" **só na home**
+  (categorias mostram só produtos); (3) filtro de preço **escondido** (abre sob demanda, não fica
+  aparente); (4) **nav de categorias sticky** ao rolar (trocar categoria sem voltar ao topo).
+  **Layout da home decidido (após 4 mockups):** blend banner "Oferta da semana" + grade com TODAS as
+  categorias visíveis (sem scroll lateral) + trilhas (Mais vendidos/Ofertas/Destaques) + catálogo.
+  Detalhes em `[[home-redesign-objetivos]]` (memória).
+  - **✅ Etapa 1 FEITA (subtítulo só na home + nav sticky):** o header + a `<CategoryPills>` agora
+    vivem num **wrapper `sticky top-0 z-40` no `(site)/layout.tsx`** (pinados juntos — sem número
+    mágico de offset). `CategoryPills` virou **client** (lê `?categoria` via `useSearchParams`,
+    esconde-se em `/checkout` e `/pedido` via `usePathname`); `SiteHeader` perdeu o `sticky` próprio.
+    O hero/subtítulo da marca na home só renderiza quando `!filtrando`. O layout busca `getCategorias`
+    (verificado: **SSG de `/produto/[slug]` segue intacto**). Verificado no preview (sticky ao rolar,
+    hero some na categoria, nav some no checkout); build limpo.
+  - **➡️ PRÓXIMAS ETAPAS (retomar aqui):** **Etapa 2** — filtro de preço escondido: hoje a
+    `<PriceFilter>` ainda está aparente na home (`(site)/page.tsx`); mover pra um painel que abre por
+    um botão **"Filtros"** na barra sticky (dentro de `CategoryPills`, que já é client — guardar estado
+    de aberto/fechado lá). **Etapa 3** — grade com todas as categorias visíveis na home (tiles com
+    ícone; precisa de um mapa categoria→ícone lucide). **Etapa 4** — banner "Oferta da semana" (puxa de
+    `getProdutosEmOferta`) + trilha "Mais vendidos" (proxy via itens mais pedidos / fallback Destaques).
 - **Fase atual:** 5 — Backlog / pós-validação **EM ANDAMENTO** 🚧 (Fases 0–4 fechadas; demo no ar e
   testada). O Lucas está pegando itens do backlog que **não dependem do dono** (valor de portfólio).
   **Itens dependentes do dono seguem pendentes** (não bloqueiam a demo): **preços reais** (hoje

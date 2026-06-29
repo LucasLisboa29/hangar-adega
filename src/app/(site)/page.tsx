@@ -1,12 +1,10 @@
 import { Suspense } from "react";
 import { SearchX, Star, Tag } from "lucide-react";
 
-import { CategoryPills } from "@/components/category-pills";
 import { PriceFilter } from "@/components/price-filter";
 import { ProductCard } from "@/components/product-card";
 import {
   buscarProdutos,
-  getCategorias,
   getCategoriasComProdutos,
   getProdutosDestaque,
   getProdutosEmOferta,
@@ -31,27 +29,24 @@ export default async function Home({
     termoBusca || categoria || precoMinCentavos != null || precoMaxCentavos != null
   );
 
-  const categorias = await getCategorias();
-
   return (
     <div className="mx-auto max-w-6xl px-4 py-6">
-      {/* Banner curto da marca */}
-      <section className="mb-6 rounded-2xl border border-border bg-gradient-to-br from-accent/60 to-card px-6 py-8 sm:px-10 sm:py-10">
-        <span className="text-xs font-medium uppercase tracking-[0.3em] text-muted-foreground">
-          Adega & conveniência · Araguari-MG
-        </span>
-        <h1 className="mt-2 font-heading text-3xl font-bold uppercase tracking-tight text-primary sm:text-4xl">
-          Sua bebida gelada, entregue rápido
-        </h1>
-        <p className="mt-2 max-w-lg text-sm text-muted-foreground sm:text-base">
-          Cervejas, vinhos, destilados, energéticos e conveniência com entrega
-          em Uberlândia e Araguari. Pedido mínimo de R$ 25,00.
-        </p>
-      </section>
-
-      <div className="mb-4">
-        <CategoryPills categorias={categorias} activeSlug={categoria} />
-      </div>
+      {/* Banner da marca: só na home (sem filtro/busca). Ao filtrar por
+          categoria, a tela vai direto para os produtos. */}
+      {!filtrando && (
+        <section className="mb-6 rounded-2xl border border-border bg-gradient-to-br from-accent/60 to-card px-6 py-8 sm:px-10 sm:py-10">
+          <span className="text-xs font-medium uppercase tracking-[0.3em] text-muted-foreground">
+            Adega & conveniência · Araguari-MG
+          </span>
+          <h1 className="mt-2 font-heading text-3xl font-bold uppercase tracking-tight text-primary sm:text-4xl">
+            Sua bebida gelada, entregue rápido
+          </h1>
+          <p className="mt-2 max-w-lg text-sm text-muted-foreground sm:text-base">
+            Cervejas, vinhos, destilados, energéticos e conveniência com entrega
+            em Uberlândia e Araguari. Pedido mínimo de R$ 25,00.
+          </p>
+        </section>
+      )}
 
       <div className="mb-6">
         <Suspense fallback={null}>
