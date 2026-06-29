@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
+import { PwaRegister } from "@/components/pwa-register";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -42,6 +43,20 @@ export const metadata: Metadata = {
       "Bebidas, cigarros e conveniência com entrega em Uberlândia e Araguari. Peça pelo nosso catálogo online. Desde 2009.",
   },
   robots: { index: true, follow: true },
+  // PWA: ícone de toque do iOS + comportamento de app em tela cheia.
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/icons/icon-192.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Hangar",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#141414",
 };
 
 export default function RootLayout({
@@ -56,6 +71,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         {children}
+        <PwaRegister />
       </body>
     </html>
   );

@@ -106,6 +106,20 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
   (`precoEfetivoCentavos` — oferta incluída) **em JS** (o Prisma não computa COALESCE no `where`; ex.:
   Heineken base R$6,90 aparece em "até R$5" pelo efetivo R$4,83). Verificado no preview (faixa isolada,
   combinada com categoria, vazio tratado como ausente, sem erro de console); `npm run build` limpo.
+- **✅ Fase 5 — PWA / "adicionar à tela inicial" (sessão de 2026-06-29):** quarto item do backlog.
+  (1) **Manifest:** `src/app/manifest.ts` (Next gera `/manifest.webmanifest` e linka sozinho) —
+  standalone, tema `#141414`, ícones. (2) **Ícones:** gerados com `sharp` (script descartável) —
+  "H" dourado vetorial em fundo preto, em `public/icons/` (192, 512 e maskable 512); apple-touch-icon
+  aponta pro 192. **Sem logo do dono** ainda, então é placeholder da marca. (3) **Metadata raiz**
+  (`layout.tsx`): `export const viewport` com `themeColor` + `appleWebApp` + `icons`. (4) **Service
+  worker** (`public/sw.js`) **conservador de propósito**: NÃO cacheia assets/HTML (evita servir versão
+  velha pós-deploy) — só guarda uma página **offline inline** (HTML próprio, sem depender de chunks do
+  Next) e a usa como fallback quando uma navegação falha; resto passa direto pra rede. Registrado por
+  `<PwaRegister>` (`src/components/pwa-register.tsx`, client) incluído no `layout.tsx`. Verificado no
+  preview (manifest 200, ícones 200, SW ativo escopo `/`, offline cacheado, sem erro de console);
+  `npm run build` limpo. **Gotcha (mesma classe do Prisma):** ao criar um arquivo NOVO referenciado por
+  um módulo já editado, o Turbopack do dev server pode ficar com "Module not found" em cache — precisou
+  **reiniciar o dev server** (o `npm run build` em processo separado já resolvia).
 - **No ar:** https://hangar-adega.vercel.app (deploy contínuo a cada push na `main`)
 - **Concluído na Fase 4 (primeira leva — sessão de 2026-06-28):** (1) **Seção de Destaques na home**:
   `getProdutosDestaque` em `src/lib/catalog.ts` + componente `<Destaques>` no topo de `(site)/page.tsx`

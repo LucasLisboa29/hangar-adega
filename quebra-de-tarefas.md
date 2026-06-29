@@ -102,7 +102,10 @@
   e editor dos 7 dias no admin (`/admin/configuracoes`)
 - Pagamento online (Pix/cartão via gateway)
 - Conta do cliente + histórico + "repetir último pedido"
-- PWA ("adicionar à tela inicial")
+- [x] PWA ("adicionar à tela inicial") — `app/manifest.ts` (manifest + ícones H
+  dourado 192/512/maskable em `public/icons/`), `themeColor`/apple-web-app na
+  metadata raiz, service worker (`public/sw.js`) conservador com página offline
+  inline, registrado por `<PwaRegister>`
 - Importação de catálogo por planilha
 - Domínio próprio definitivo + política de privacidade/LGPD formal
 - (Estratégico) Evoluir para SaaS multi-loja, atendendo outras adegas
