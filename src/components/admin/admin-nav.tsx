@@ -24,7 +24,7 @@ export function AdminNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex gap-1 sm:flex-col">
+    <nav className="flex flex-wrap gap-1 sm:flex-col sm:flex-nowrap">
       {LINKS.map(({ href, label, icon: Icon, exato }) => {
         const ativo = exato ? pathname === href : pathname.startsWith(href);
         return (

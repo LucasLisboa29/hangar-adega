@@ -71,7 +71,16 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
   (3) **Roteiro de apresentação pro dono** em `roteiro-apresentacao.md` (demo loja+painel, ganhos vs.
   HeroDelivery, FAQ). Verificado no preview (Destaques rendeiza, sem erro de console); `npm run build`
   limpo (SSG dos 33 produtos intacto). **Pendentes da Fase 4:** correção de preços, URL apresentável,
-  admin no mobile, e WhatsApp real (depende do dono — setar em `/admin/configuracoes`).
+  e WhatsApp **do dono** (hoje está o nº de teste do Lucas — ver abaixo).
+- **✅ Admin testado no mobile + WhatsApp de teste (sessão de 2026-06-29):** painel passado a 375px
+  (login, visão geral, produtos lista+form, pedidos lista+detalhe, configurações). **Bug corrigido:**
+  a `AdminNav` (`src/components/admin/admin-nav.tsx`) era `flex` sem wrap → os 5 itens estouravam a
+  largura e davam scroll horizontal na página inteira no mobile; resolvido com `flex-wrap` (mobile) +
+  `sm:flex-nowrap` (desktop segue coluna). As tabelas de produtos/pedidos usam `overflow-x-auto`
+  (scroll lateral dentro da tabela) — controles acessíveis, padrão aceitável p/ a demo. **WhatsApp:**
+  `ConfigLoja.whatsapp` setado pro **número de teste do Lucas `34999467562`** (`normalizarParaWaMe`
+  prefixa o `55` → `5534999467562`) pra validar o fluxo de pedido fim-a-fim; **trocar pelo número do
+  dono** quando houver contato (em `/admin/configuracoes`).
 - **Concluído na Fase 4 (segunda leva — sessão de 2026-06-29):** (1) **Revisão de UX/responsividade**:
   fluxo da loja testado em mobile (375px) e desktop — home, produto, carrinho (drawer + stepper + aviso
   de mínimo), checkout (pagamento/troco/+18), /loja, 404; sem bug de layout nem erro de console. (Falta
