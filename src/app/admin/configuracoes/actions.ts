@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { verificarSessao } from "@/lib/auth/dal";
 import { parseReaisParaCentavos } from "@/lib/format";
+import { parseHorarios } from "@/lib/horario";
 
 export type ConfigState = { erro?: string; ok?: boolean };
 
@@ -29,6 +30,14 @@ export async function salvarConfig(
     return { erro: "Pedido mínimo inválido. Use o formato 25,00." };
   }
 
+  // Grade semanal: 7 dias (0=domingo … 6=sábado) lidos do form e normalizados.
+  const horariosBrutos = Array.from({ length: 7 }, (_, i) => ({
+    fechado: formData.get(`dia-${i}-fechado`) === "on",
+    abre: String(formData.get(`dia-${i}-abre`) ?? ""),
+    fecha: String(formData.get(`dia-${i}-fecha`) ?? ""),
+  }));
+  const horarios = parseHorarios(horariosBrutos);
+
   const dados = {
     nome,
     whatsapp,
@@ -37,6 +46,7 @@ export async function salvarConfig(
     areaEntrega,
     aberta,
     pedidoMinimoCentavos: minimoCentavos,
+    horarios,
   };
 
   // ConfigLoja é um singleton (o seed cria 1 registro). Atualiza o existente;

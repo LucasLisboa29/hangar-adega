@@ -91,7 +91,10 @@
 - Combos / "leve junto" e sugestões de itens relacionados
 - Promoções e marcação de produto em oferta
 - Filtro por faixa de preço
-- Indicador de loja aberta/fechada conforme horário
+- [x] Indicador de loja aberta/fechada conforme horário — grade semanal em
+  `ConfigLoja.horarios` (fuso America/Sao_Paulo, com virada de meia-noite),
+  badge "ao vivo" no header (via `/api/loja/status`), card de horários na `/loja`
+  e editor dos 7 dias no admin (`/admin/configuracoes`)
 - Pagamento online (Pix/cartão via gateway)
 - Conta do cliente + histórico + "repetir último pedido"
 - PWA ("adicionar à tela inicial")

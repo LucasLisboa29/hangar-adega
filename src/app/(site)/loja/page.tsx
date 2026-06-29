@@ -3,6 +3,16 @@ import { Clock, MapPin, Phone, ShoppingBag, Truck } from "lucide-react";
 
 import { getConfigLoja } from "@/lib/catalog";
 import { formatBRL } from "@/lib/format";
+import { StatusLojaBadge } from "@/components/status-loja";
+import {
+  calcularStatusLoja,
+  parseHorarios,
+  diaDaSemanaNaLoja,
+  DIAS_SEMANA,
+} from "@/lib/horario";
+
+// A /loja já lê do banco (config), então pode renderizar o status no servidor.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "A loja",
@@ -12,6 +22,11 @@ export const metadata: Metadata = {
 
 export default async function LojaPage() {
   const config = await getConfigLoja();
+  const status = calcularStatusLoja(config);
+  const horarios = parseHorarios(config?.horarios);
+
+  // Índice do dia atual no fuso da loja, para destacar a linha de hoje.
+  const hoje = diaDaSemanaNaLoja();
 
   const itens = [
     {
@@ -33,11 +48,6 @@ export default async function LojaPage() {
       icon: ShoppingBag,
       titulo: "Pedido mínimo",
       valor: formatBRL(config?.pedidoMinimoCentavos ?? 2500),
-    },
-    {
-      icon: Clock,
-      titulo: "Funcionamento",
-      valor: config?.aberta ? "Loja aberta para pedidos" : "Fechada no momento",
     },
   ];
 
@@ -70,6 +80,40 @@ export default async function LojaPage() {
           </div>
         ))}
       </dl>
+
+      <section className="mt-3 rounded-xl border border-border bg-card p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-3">
+            <Clock className="size-5 shrink-0 text-primary" />
+            <span className="text-xs uppercase tracking-wide text-muted-foreground">
+              Funcionamento
+            </span>
+          </div>
+          <StatusLojaBadge status={status} comDetalhe />
+        </div>
+
+        <ul className="mt-4 space-y-1.5">
+          {horarios.map((dia, i) => (
+            <li
+              key={DIAS_SEMANA[i]}
+              className={
+                "flex items-center justify-between text-sm " +
+                (i === hoje ? "font-semibold text-foreground" : "text-muted-foreground")
+              }
+            >
+              <span>
+                {DIAS_SEMANA[i]}
+                {i === hoje && (
+                  <span className="ml-2 text-xs font-normal text-primary">hoje</span>
+                )}
+              </span>
+              <span>
+                {dia.fechado ? "Fechado" : `${dia.abre} – ${dia.fecha}`}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <p className="mt-8 rounded-xl border border-border bg-card/40 p-4 text-xs text-muted-foreground">
         Venda de bebidas alcoólicas e tabaco proibida para menores de 18 anos. A

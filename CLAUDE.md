@@ -60,12 +60,30 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
 
 ## Estado atual do projeto
 
-- **Fase atual:** 4 — Polimento & Demo **CONCLUÍDA** ✅ (Marco "DEMO no ar, pronta pra apresentar"
-  atingido). Próxima é a **Fase 5** (backlog/pós-validação — ver [quebra-de-tarefas.md](quebra-de-tarefas.md)).
-  **Itens que sobraram são todos dependentes do dono** (não bloqueiam a demo): **preços reais** (hoje
+- **Fase atual:** 5 — Backlog / pós-validação **EM ANDAMENTO** 🚧 (Fases 0–4 fechadas; demo no ar e
+  testada). O Lucas está pegando itens do backlog que **não dependem do dono** (valor de portfólio).
+  **Itens dependentes do dono seguem pendentes** (não bloqueiam a demo): **preços reais** (hoje
   estimados — decisão do Lucas de manter), **número real do WhatsApp** (hoje o nº de teste do Lucas) e
-  **URL/domínio próprio** (hoje `hangar-adega.vercel.app`, decisão de manter). Loja + admin no ar,
-  responsivos, testados no celular, com pedido fim-a-fim funcionando (testado pelo Lucas em 2026-06-29).
+  **URL/domínio próprio** (hoje `hangar-adega.vercel.app`, decisão de manter).
+- **✅ Fase 5 — Indicador de loja aberta/fechada por horário (sessão de 2026-06-29):** primeiro item do
+  backlog da Fase 5. (1) **Modelo:** novo campo `ConfigLoja.horarios` (`Json?`, migration
+  `add_horarios_loja`) com a grade semanal (7 dias, 0=domingo…6=sábado, cada um `{fechado, abre, fecha}`
+  "HH:MM"); o `aberta` (bool) virou **override manual** (kill-switch p/ feriado). Status final =
+  `aberta ∧ dentro do horário`. (2) **Lib `src/lib/horario.ts`:** `calcularStatusLoja(config, agora?)`
+  calcula tudo no **fuso America/Sao_Paulo** via `Intl` (servidor da Vercel roda em UTC — não dá pra usar
+  `getDay()` direto), trata **virada de meia-noite** (fecha ≤ abre = madrugada do dia seguinte) e calcula a
+  **próxima abertura** ("Abre Terça às 09:00"). `HORARIOS_PADRAO` cobre quando o campo é null.
+  (3) **Badge no header:** as páginas da loja são **SSG** (home, `/produto/[slug]` por SEO), e o status
+  depende da hora — então o badge é **client-side** (`<StatusLojaLive>` em `src/components/status-loja.tsx`)
+  buscando `/api/loja/status` (route handler `force-dynamic`) e revalidando a cada 1 min. Isso mantém o
+  SSG intacto e o badge sempre "ao vivo" (vira aberta↔fechada sem redeploy). (4) **`/loja`:** card de
+  funcionamento com a grade da semana + dia de hoje destacado + badge (renderizado no servidor, página já
+  era dinâmica). (5) **Admin:** editor dos 7 dias (inputs `type="time"` + checkbox "Fechado") no
+  `config-form.tsx`; `actions.ts` lê `dia-{i}-{fechado,abre,fecha}` e normaliza via `parseHorarios`.
+  Verificado: badge "Aberta · Fecha às 23:00" no header, card na `/loja`, lib unit-testada (aberta/fechada/
+  próxima abertura/override/madrugada), `npm run build` limpo (SSG dos 33 produtos intacto). **Gotcha:**
+  `prisma migrate dev` NÃO regenerou o client no output custom (`src/generated/prisma`) — precisou de
+  `npx prisma generate` à parte antes do build enxergar `ConfigLoja.horarios`.
 - **No ar:** https://hangar-adega.vercel.app (deploy contínuo a cada push na `main`)
 - **Concluído na Fase 4 (primeira leva — sessão de 2026-06-28):** (1) **Seção de Destaques na home**:
   `getProdutosDestaque` em `src/lib/catalog.ts` + componente `<Destaques>` no topo de `(site)/page.tsx`

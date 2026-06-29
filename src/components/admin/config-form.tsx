@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { salvarConfig, type ConfigState } from "@/app/admin/configuracoes/actions";
 import { centavosParaInput } from "@/lib/format";
+import { DIAS_SEMANA, type Horarios } from "@/lib/horario";
 
 type Config = {
   nome: string;
@@ -15,6 +16,7 @@ type Config = {
   areaEntrega: string | null;
   pedidoMinimoCentavos: number;
   aberta: boolean;
+  horarios: Horarios;
 };
 
 const estadoInicial: ConfigState = {};
@@ -95,6 +97,49 @@ export function ConfigForm({ config }: { config: Config }) {
         />
       </div>
 
+      <fieldset className="space-y-2 rounded-xl border border-border p-4">
+        <legend className="px-1 text-sm font-medium">Horário de funcionamento</legend>
+        <p className="text-xs text-muted-foreground">
+          Define quando o site mostra a loja como <strong>Aberta</strong> ou{" "}
+          <strong>Fechada</strong> (fuso de Brasília). Marque o dia como fechado, ou
+          informe abertura e fechamento. Para virar a madrugada, use um fechamento
+          menor que a abertura (ex.: abre 18:00, fecha 02:00).
+        </p>
+        <div className="space-y-2">
+          {config.horarios.map((dia, i) => (
+            <div key={DIAS_SEMANA[i]} className="flex flex-wrap items-center gap-2">
+              <span className="w-20 text-sm text-muted-foreground">
+                {DIAS_SEMANA[i]}
+              </span>
+              <label className="flex items-center gap-1.5 text-xs">
+                <input
+                  type="checkbox"
+                  name={`dia-${i}-fechado`}
+                  defaultChecked={dia.fechado}
+                  className="size-4 accent-primary"
+                />
+                Fechado
+              </label>
+              <Input
+                type="time"
+                name={`dia-${i}-abre`}
+                defaultValue={dia.abre}
+                aria-label={`${DIAS_SEMANA[i]} — abre`}
+                className="w-32"
+              />
+              <span className="text-muted-foreground">–</span>
+              <Input
+                type="time"
+                name={`dia-${i}-fecha`}
+                defaultValue={dia.fecha}
+                aria-label={`${DIAS_SEMANA[i]} — fecha`}
+                className="w-32"
+              />
+            </div>
+          ))}
+        </div>
+      </fieldset>
+
       <label className="flex items-center gap-2 text-sm">
         <input
           type="checkbox"
@@ -102,7 +147,7 @@ export function ConfigForm({ config }: { config: Config }) {
           defaultChecked={config.aberta}
           className="size-4 accent-primary"
         />
-        Loja aberta (aceitando pedidos)
+        Loja operando (desmarque para forçar “Fechada”, ex.: feriado)
       </label>
 
       {state?.erro && <p className="text-sm text-destructive">{state.erro}</p>}

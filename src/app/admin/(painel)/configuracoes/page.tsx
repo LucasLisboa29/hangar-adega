@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ConfigForm } from "@/components/admin/config-form";
+import { parseHorarios } from "@/lib/horario";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,7 @@ const PADRAO = {
   areaEntrega: null,
   pedidoMinimoCentavos: 2500,
   aberta: true,
+  horarios: null,
 };
 
 export default async function ConfiguracoesPage() {
@@ -34,6 +36,7 @@ export default async function ConfiguracoesPage() {
           areaEntrega: config.areaEntrega,
           pedidoMinimoCentavos: config.pedidoMinimoCentavos,
           aberta: config.aberta,
+          horarios: parseHorarios(config.horarios),
         }}
       />
     </div>

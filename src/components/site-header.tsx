@@ -3,7 +3,11 @@ import { Suspense } from "react";
 
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { SearchBar } from "@/components/search-bar";
+import { StatusLojaLive } from "@/components/status-loja";
 
+// Síncrono de propósito: o header é compartilhado pelas páginas SSG (home,
+// /produto/[slug]). O status "aberta/fechada" depende da hora atual, então é
+// calculado no cliente (<StatusLojaLive>) — assim as páginas seguem estáticas.
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
@@ -19,7 +23,8 @@ export function SiteHeader() {
           </Link>
 
           {/* Ações no topo — só no mobile (no desktop ficam à direita) */}
-          <div className="flex items-center gap-1 sm:hidden">
+          <div className="flex items-center gap-2 sm:hidden">
+            <StatusLojaLive />
             <Link
               href="/loja"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -36,6 +41,7 @@ export function SiteHeader() {
         </Suspense>
 
         <div className="hidden items-center gap-4 sm:flex">
+          <StatusLojaLive comDetalhe />
           <Link
             href="/loja"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"

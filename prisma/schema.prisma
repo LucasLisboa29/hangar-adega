@@ -103,5 +103,10 @@ model ConfigLoja {
   pedidoMinimoCentavos Int      @default(2500)
   areaEntrega          String?
   aberta               Boolean  @default(true)
+  // Grade semanal de funcionamento: array de 7 dias (0=domingo … 6=sábado),
+  // cada um { fechado, abre, fecha } com horas "HH:MM". Quando null, usa o
+  // padrão de src/lib/horario.ts. O status "aberta agora" combina este horário
+  // com o override manual `aberta` (kill-switch para feriado/fechar mais cedo).
+  horarios             Json?
   atualizadoEm         DateTime @updatedAt
 }
