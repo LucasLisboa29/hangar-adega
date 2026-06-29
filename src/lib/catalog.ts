@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { precoEfetivoCentavos } from "@/lib/format";
 
 // Camada de acesso ao catálogo. Tudo roda em Server Components (Next 16),
 // então as queries Prisma ficam no servidor e nunca vazam pro bundle do cliente.
@@ -56,9 +57,11 @@ export async function getCategorias() {
 export async function buscarProdutos(params: {
   q?: string;
   categoriaSlug?: string;
+  precoMinCentavos?: number;
+  precoMaxCentavos?: number;
 }) {
-  const { q, categoriaSlug } = params;
-  return prisma.produto.findMany({
+  const { q, categoriaSlug, precoMinCentavos, precoMaxCentavos } = params;
+  const produtos = await prisma.produto.findMany({
     where: {
       ativo: true,
       ...(categoriaSlug ? { categoria: { slug: categoriaSlug } } : {}),
@@ -68,6 +71,16 @@ export async function buscarProdutos(params: {
     },
     orderBy: [{ esgotado: "asc" }, { nome: "asc" }],
     include: { categoria: { select: { nome: true, slug: true } } },
+  });
+
+  // Faixa de preço aplicada sobre o preço EFETIVO (oferta quando houver) — é o
+  // que o cliente paga. Feito em JS porque o Prisma não computa COALESCE no where.
+  if (precoMinCentavos == null && precoMaxCentavos == null) return produtos;
+  return produtos.filter((p) => {
+    const preco = precoEfetivoCentavos(p);
+    if (precoMinCentavos != null && preco < precoMinCentavos) return false;
+    if (precoMaxCentavos != null && preco > precoMaxCentavos) return false;
+    return true;
   });
 }
 

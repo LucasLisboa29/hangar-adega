@@ -93,7 +93,9 @@
   (opcional, < preço); selo "-N%" + preço riscado nos cards e na página de produto,
   seção "Ofertas" na home, preço efetivo no carrinho e revalidado no checkout, e
   campo "Preço em oferta" no admin
-- Filtro por faixa de preço
+- [x] Filtro por faixa de preço — `?precoMin=&precoMax=` na home (componente
+  `PriceFilter`, GET que preserva busca/categoria); filtra pelo **preço efetivo**
+  (oferta incluída) em `buscarProdutos`
 - [x] Indicador de loja aberta/fechada conforme horário — grade semanal em
   `ConfigLoja.horarios` (fuso America/Sao_Paulo, com virada de meia-noite),
   badge "ao vivo" no header (via `/api/loja/status`), card de horários na `/loja`

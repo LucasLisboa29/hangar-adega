@@ -98,6 +98,14 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
   de oferta na lista de produtos. Verificado no preview (home/produto/carrinho com a promo, subtotal
   com preço de oferta, sem erro de console); `npm run build` limpo (SSG dos 33 produtos intacto).
   **Há uma oferta de teste (-30%) na Heineken** semeada p/ demo — remover/ajustar em `/admin/produtos`.
+- **✅ Fase 5 — Filtro por faixa de preço (sessão de 2026-06-29):** terceiro item do backlog. Novo
+  componente `src/components/price-filter.tsx` (`<PriceFilter>`): form **GET** para `/` com inputs
+  `precoMin`/`precoMax` (em reais) + hidden `q`/`categoria` (preserva busca/categoria ao aplicar) +
+  link "Limpar". A home lê os params, converte com `parseReaisParaCentavos` e inclui no estado
+  `filtrando`. `buscarProdutos` ganhou `precoMin/MaxCentavos` e filtra pelo **preço efetivo**
+  (`precoEfetivoCentavos` — oferta incluída) **em JS** (o Prisma não computa COALESCE no `where`; ex.:
+  Heineken base R$6,90 aparece em "até R$5" pelo efetivo R$4,83). Verificado no preview (faixa isolada,
+  combinada com categoria, vazio tratado como ausente, sem erro de console); `npm run build` limpo.
 - **No ar:** https://hangar-adega.vercel.app (deploy contínuo a cada push na `main`)
 - **Concluído na Fase 4 (primeira leva — sessão de 2026-06-28):** (1) **Seção de Destaques na home**:
   `getProdutosDestaque` em `src/lib/catalog.ts` + componente `<Destaques>` no topo de `(site)/page.tsx`

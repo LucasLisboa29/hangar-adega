@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import { SearchX, Star, Tag } from "lucide-react";
 
 import { CategoryPills } from "@/components/category-pills";
+import { PriceFilter } from "@/components/price-filter";
 import { ProductCard } from "@/components/product-card";
 import {
   buscarProdutos,
@@ -9,15 +11,25 @@ import {
   getProdutosDestaque,
   getProdutosEmOferta,
 } from "@/lib/catalog";
+import { parseReaisParaCentavos } from "@/lib/format";
 
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; categoria?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    categoria?: string;
+    precoMin?: string;
+    precoMax?: string;
+  }>;
 }) {
-  const { q, categoria } = await searchParams;
+  const { q, categoria, precoMin, precoMax } = await searchParams;
   const termoBusca = q?.trim();
-  const filtrando = Boolean(termoBusca || categoria);
+  const precoMinCentavos = precoMin ? parseReaisParaCentavos(precoMin) : null;
+  const precoMaxCentavos = precoMax ? parseReaisParaCentavos(precoMax) : null;
+  const filtrando = Boolean(
+    termoBusca || categoria || precoMinCentavos != null || precoMaxCentavos != null
+  );
 
   const categorias = await getCategorias();
 
@@ -37,12 +49,23 @@ export default async function Home({
         </p>
       </section>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <CategoryPills categorias={categorias} activeSlug={categoria} />
       </div>
 
+      <div className="mb-6">
+        <Suspense fallback={null}>
+          <PriceFilter />
+        </Suspense>
+      </div>
+
       {filtrando ? (
-        <ResultadosFiltrados q={termoBusca} categoriaSlug={categoria} />
+        <ResultadosFiltrados
+          q={termoBusca}
+          categoriaSlug={categoria}
+          precoMinCentavos={precoMinCentavos ?? undefined}
+          precoMaxCentavos={precoMaxCentavos ?? undefined}
+        />
       ) : (
         <>
           <Ofertas />
@@ -120,11 +143,20 @@ async function CatalogoPorCategoria() {
 async function ResultadosFiltrados({
   q,
   categoriaSlug,
+  precoMinCentavos,
+  precoMaxCentavos,
 }: {
   q?: string;
   categoriaSlug?: string;
+  precoMinCentavos?: number;
+  precoMaxCentavos?: number;
 }) {
-  const produtos = await buscarProdutos({ q, categoriaSlug });
+  const produtos = await buscarProdutos({
+    q,
+    categoriaSlug,
+    precoMinCentavos,
+    precoMaxCentavos,
+  });
 
   if (produtos.length === 0) {
     return (
@@ -132,7 +164,11 @@ async function ResultadosFiltrados({
         <SearchX className="size-8 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">
           Nenhum produto encontrado
-          {q ? ` para “${q}”` : ""}.
+          {q ? ` para “${q}”` : ""}
+          {precoMinCentavos != null || precoMaxCentavos != null
+            ? " nessa faixa de preço"
+            : ""}
+          .
         </p>
       </div>
     );
