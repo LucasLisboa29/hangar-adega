@@ -88,10 +88,31 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
     ativo. Label do submit virou "Aplicar". Verificado no preview (abre/fecha, auto-abre em
     `?precoMax=5` com 6 produtos pelo preço efetivo, hero some ao filtrar, sem erro de console); build
     limpo (SSG dos 33 produtos intacto).
-  - **➡️ PRÓXIMAS ETAPAS (retomar aqui):** **Etapa 3** — grade com todas as categorias visíveis na home
-    (tiles com ícone; precisa de um mapa categoria→ícone lucide). **Etapa 4** — banner "Oferta da
-    semana" (puxa de `getProdutosEmOferta`) + trilha "Mais vendidos" (proxy via itens mais pedidos /
-    fallback Destaques).
+  - **🧪 Etapa 3 IMPLEMENTADA — aguardando o Lucas testar (ponto de restauração: commit `78989dd`).**
+    O Lucas pediu pra **testar antes** e, se NÃO aprovar, **voltar pro commit `78989dd`** (a home da
+    Etapa 2). Combinação de mockups: home final = banner "Oferta da semana" (B) + grade de categorias
+    (A) + trilhas, nesta ordem: **hero · oferta da semana · categorias · mais vendidos · ofertas ·
+    destaques · catálogo**. (1) **Banner `<OfertaDaSemana>`** (`src/components/oferta-da-semana.tsx`):
+    puxa `getProdutosEmOferta` e destaca o de **maior desconto** (preço efetivo + cheio riscado + selo
+    -N% + CTA "Aproveitar"); some se não houver oferta. (2) **Grade `<GradeCategorias>`**
+    (`src/components/categoria-grid.tsx`): `getCategorias` em tiles com ícone lucide (mapa
+    `ICONE_POR_SLUG`: cervejas→Beer, vinhos→Wine, destilados→Martini, energeticos→Zap,
+    refrigerantes→CupSoda, sucos→Citrus, isotonicos→Dumbbell, aguas→Droplets, tabacaria→Cigarette,
+    conveniencia→ShoppingBasket; fallback GlassWater); `grid-cols-3 sm:grid-cols-5` (todas visíveis).
+    A `<section id="grade-categorias">` é o **alvo do scroll da barra**. (3) **Trilha "Mais vendidos"**
+    (função local em `page.tsx` + `getMaisVendidos` no catalog): **PLACEHOLDER** — lista curada de slugs
+    populares, estável (sem métrica real ainda; trocar por groupBy em ItemPedido quando houver volume).
+    (4) **Barra sticky escondida na home até passar a grade:** `CategoryPills` ganhou um `useEffect` que
+    mede o `<header>` e, **via listener de `scroll`** (NÃO IntersectionObserver — ele não dispara no
+    preview headless), mostra a barra quando `grade.bottom <= header.height`; sem grade (categoria/busca/
+    produto) a barra aparece desde o topo. **GOTCHA do preview:** `window.scrollTo` programático no
+    preview headless NÃO dispara `scroll` nem IO — pra testar o handler, `window.dispatchEvent(new
+    Event('scroll'))` após o scrollTo (validado: barra aparece ao passar a grade, some no topo).
+    Screenshots do preview deram timeout nesta sessão; verificação foi via `preview_eval` (DOM/estado) +
+    `npm run build` limpo (SSG dos 33 produtos intacto). **Falta o teste visual do Lucas no navegador.**
+  - **➡️ PRÓXIMA (após aprovação da Etapa 3):** se o Lucas aprovar, **commit + push**; senão, **reset pro
+    `78989dd`**. Possível Etapa 4 / polimento: imagem real no banner depende de foto boa; "Mais vendidos"
+    real; revisar mobile da nova home.
 - **Fase atual:** 5 — Backlog / pós-validação **EM ANDAMENTO** 🚧 (Fases 0–4 fechadas; demo no ar e
   testada). O Lucas está pegando itens do backlog que **não dependem do dono** (valor de portfólio).
   **Itens dependentes do dono seguem pendentes** (não bloqueiam a demo): **preços reais** (hoje

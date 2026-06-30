@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { SlidersHorizontal } from "lucide-react";
@@ -15,14 +15,58 @@ type Categoria = { id: string; nome: string; slug: string };
 // onde navegar por categoria não faz sentido. "Todos" limpa o filtro. O botão
 // "Filtros" abre/fecha um painel de faixa de preço logo abaixo da barra (escondido
 // por padrão); abre automático quando já há um filtro de preço ativo na URL.
+//
+// Na home a barra fica ESCONDIDA enquanto a grade de categorias (#grade-categorias)
+// está à vista — quem navega ali é a grade, então mostrar a barra junto seria
+// navegação duplicada. Quando a grade rola pra cima e some, a barra aparece e passa
+// a acompanhar o scroll. Nas telas sem grade (categoria/busca/produto) a barra
+// aparece normalmente desde o topo.
 export function CategoryPills({ categorias }: { categorias: Categoria[] }) {
   const pathname = usePathname();
   const params = useSearchParams();
+  const query = params.toString();
   const activeSlug = params.get("categoria") ?? undefined;
   const precoAtivo = Boolean(params.get("precoMin") || params.get("precoMax"));
   const [filtrosAbertos, setFiltrosAbertos] = useState(precoAtivo);
 
+  // Estado inicial sem flash: a grade só existe na home sem filtro/busca; lá a
+  // barra nasce escondida. Nas demais telas nasce visível.
+  const gradePresenteAgora =
+    pathname === "/" &&
+    !params.get("q") &&
+    !activeSlug &&
+    !precoAtivo;
+  const [visivel, setVisivel] = useState(!gradePresenteAgora);
+
+  useEffect(() => {
+    const grade = document.getElementById("grade-categorias");
+    if (!grade) {
+      // Sem grade (categoria/busca/produto): barra visível desde o topo.
+      setVisivel(true);
+      return;
+    }
+    // Tem grade (home): a barra aparece quando a grade desliza acima do header
+    // sticky (deixa de ser navegação visível). Listener de scroll porque o
+    // IntersectionObserver não dispara de forma confiável no preview headless.
+    const avaliar = () => {
+      const header = document.querySelector("header");
+      const offset = header ? header.getBoundingClientRect().height : 0;
+      setVisivel(grade.getBoundingClientRect().bottom <= offset);
+    };
+    avaliar();
+    window.addEventListener("scroll", avaliar, { passive: true });
+    window.addEventListener("resize", avaliar);
+    return () => {
+      window.removeEventListener("scroll", avaliar);
+      window.removeEventListener("resize", avaliar);
+    };
+  }, [pathname, query]);
+
   if (pathname.startsWith("/checkout") || pathname.startsWith("/pedido")) {
+    return null;
+  }
+
+  if (!visivel) {
     return null;
   }
 

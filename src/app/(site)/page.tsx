@@ -1,9 +1,12 @@
-import { SearchX, Star, Tag } from "lucide-react";
+import { Flame, SearchX, Star, Tag } from "lucide-react";
 
+import { GradeCategorias } from "@/components/categoria-grid";
+import { OfertaDaSemana } from "@/components/oferta-da-semana";
 import { ProductCard } from "@/components/product-card";
 import {
   buscarProdutos,
   getCategoriasComProdutos,
+  getMaisVendidos,
   getProdutosDestaque,
   getProdutosEmOferta,
 } from "@/lib/catalog";
@@ -55,12 +58,35 @@ export default async function Home({
         />
       ) : (
         <>
+          <OfertaDaSemana />
+          <GradeCategorias />
+          <MaisVendidos />
           <Ofertas />
           <Destaques />
           <CatalogoPorCategoria />
         </>
       )}
     </div>
+  );
+}
+
+async function MaisVendidos() {
+  const produtos = await getMaisVendidos();
+
+  if (produtos.length === 0) return null;
+
+  return (
+    <section className="mb-10">
+      <h2 className="mb-3 flex items-center gap-2 font-heading text-xl font-semibold uppercase tracking-tight text-foreground">
+        <Flame className="size-5 text-primary" />
+        Mais vendidos
+      </h2>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        {produtos.map((produto) => (
+          <ProductCard key={produto.id} produto={produto} />
+        ))}
+      </div>
+    </section>
   );
 }
 

@@ -41,6 +41,35 @@ export async function getProdutosEmOferta(limite = 8) {
     .slice(0, limite);
 }
 
+// PLACEHOLDER — "Mais vendidos" ainda NÃO tem métrica real de vendas. Por ora é
+// uma lista curada de itens populares (estável: não reembaralha a cada reload, pra
+// não parecer bug). Quando houver volume de pedidos, trocar por uma contagem real
+// (groupBy em ItemPedido por produto, ordenando pela soma das quantidades).
+const SLUGS_MAIS_VENDIDOS = [
+  "heineken-long-neck-330ml",
+  "skol-lata-350ml",
+  "coca-cola-lata-350ml",
+  "red-bull-250ml",
+  "brahma-duplo-malte-350ml",
+  "guarana-antarctica-2l",
+  "corona-extra-330ml",
+  "monster-energy-473ml",
+];
+
+/** Produtos "mais vendidos" (placeholder curado — ver nota acima). */
+export async function getMaisVendidos(limite = 8) {
+  const produtos = await prisma.produto.findMany({
+    where: { ativo: true, esgotado: false, slug: { in: SLUGS_MAIS_VENDIDOS } },
+    include: { categoria: { select: { nome: true, slug: true } } },
+  });
+  // Preserva a ordem curada (o findMany não garante a ordem do `in`).
+  return SLUGS_MAIS_VENDIDOS.map((slug) =>
+    produtos.find((p) => p.slug === slug)
+  )
+    .filter((p): p is (typeof produtos)[number] => Boolean(p))
+    .slice(0, limite);
+}
+
 /** Só as categorias ativas (para a navegação/filtro). */
 export async function getCategorias() {
   return prisma.categoria.findMany({
