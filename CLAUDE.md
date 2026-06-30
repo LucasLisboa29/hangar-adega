@@ -64,13 +64,13 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
   (Fases 0–5, leva inicial), o Lucas entrou na etapa combinada desde o começo: **ele testa o app
   pronto e pede ajustes** (acrescentar, mover, mudar design/UX). Trabalhar **por etapas, uma de cada
   vez**, e **ao final de cada uma perguntar se ele quer mais**. Pedido de tela/design → **gerar mockup
-  antes de codar**. Decisão final de UX é dele. **1ª leva (home, em andamento):** (1) mais complexidade
-  na home (não só vitrine agrupada); (2) subtítulo "ADEGA & CONVENIÊNCIA · ARAGUARI-MG" **só na home**
-  (categorias mostram só produtos); (3) filtro de preço **escondido** (abre sob demanda, não fica
-  aparente); (4) **nav de categorias sticky** ao rolar (trocar categoria sem voltar ao topo).
-  **Layout da home decidido (após 4 mockups):** blend banner "Oferta da semana" + grade com TODAS as
-  categorias visíveis (sem scroll lateral) + trilhas (Mais vendidos/Ofertas/Destaques) + catálogo.
-  Detalhes em `[[home-redesign-objetivos]]` (memória).
+  antes de codar**. Decisão final de UX é dele. **1ª leva (home) — ✅ CONCLUÍDA E NO AR** (Etapas 1–3 +
+  barra de categorias v2; commits `eba69d3`→`4b9edd1`): (1) mais complexidade na home (banner oferta +
+  grade de categorias + trilhas, não só vitrine agrupada); (2) subtítulo "ADEGA & CONVENIÊNCIA ·
+  ARAGUARI-MG" **só na home**; (3) filtro de preço **escondido** (botão "Filtros" na barra sticky); (4)
+  **nav de categorias sticky** ao rolar, escondida na home até passar a grade, com abas underline + header
+  opaco contínuo + animação de surgir/sumir. Detalhes em `[[home-redesign-objetivos]]` (memória) e nos
+  blocos abaixo. **Próxima leva: o Lucas trará novos pedidos numa nova sessão.**
   - **✅ Etapa 1 FEITA (subtítulo só na home + nav sticky):** o header + a `<CategoryPills>` agora
     vivem num **wrapper `sticky top-0 z-40` no `(site)/layout.tsx`** (pinados juntos — sem número
     mágico de offset). `CategoryPills` virou **client** (lê `?categoria` via `useSearchParams`,
@@ -319,12 +319,15 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
 
 1. **Subir o ambiente:** `npm install` → `npm run dev` → http://localhost:3000 (`.env` já conecta ao Supabase).
    Admin: `/admin/login` (rodar `npm run admin:criar` se precisar (re)criar o usuário; lê `ADMIN_*` do `.env`).
-2. **Fases 0–4 fechadas.** A **demo está no ar e testada no celular**. A próxima é a **Fase 5**
-   (backlog/pós-validação — ver lista em [quebra-de-tarefas.md](quebra-de-tarefas.md)): combos/"leve junto",
-   promoções, filtro por faixa de preço, indicador de loja aberta/fechada por horário, pagamento online
-   (Pix/cartão via gateway), conta do cliente + histórico, PWA, importação de catálogo por planilha,
-   domínio próprio + LGPD, e (estratégico) evoluir pra SaaS multi-loja. **Escolher com o Lucas o que
-   priorizar** — várias dessas idealmente entram após validação com o dono, mas valem como portfólio.
+2. **Modo atual = REFINAMENTO DIRIGIDO PELO LUCAS** (ver bloco no topo): ele testa o app no ar e pede
+   ajustes de UX/design, **uma etapa de cada vez**, com **mockup antes de codar** e **commit só após ele
+   aprovar/testar**. A **1ª leva (redesenho da home + barra de categorias v2) está CONCLUÍDA e no ar**
+   (até o commit `4b9edd1`). Na nova sessão, **perguntar ao Lucas qual é o próximo pedido**. O backlog
+   formal da **Fase 5** segue disponível em [quebra-de-tarefas.md](quebra-de-tarefas.md) (combos/"leve
+   junto", pagamento online via gateway, conta do cliente + histórico, importação por planilha, domínio
+   próprio + LGPD, e — estratégico — SaaS multi-loja) caso ele prefira pegar um item de lá em vez de um
+   refino visual. (Itens já feitos da Fase 5: promoções, filtro por faixa de preço, loja aberta/fechada
+   por horário, PWA — ver "Estado atual".)
 3. **Pendências que dependem do dono (não bloqueiam a demo):** número real do WhatsApp e preços reais
    (hoje nº de teste do Lucas + preços estimados, ambos editáveis em `/admin/configuracoes` e no admin),
    logo em alta, domínio próprio.
