@@ -10,7 +10,7 @@ import { StatusLojaLive } from "@/components/status-loja";
 // calculado no cliente (<StatusLojaLive>) — assim as páginas seguem estáticas.
 export function SiteHeader() {
   return (
-    <header className="border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+    <header className="bg-background">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:gap-6">
         <div className="flex items-center justify-between gap-4">
           <Link href="/" className="flex flex-col leading-none">

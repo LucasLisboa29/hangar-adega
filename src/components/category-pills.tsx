@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { SlidersHorizontal } from "lucide-react";
@@ -38,6 +38,28 @@ export function CategoryPills({ categorias }: { categorias: Categoria[] }) {
     !precoAtivo;
   const [visivel, setVisivel] = useState(!gradePresenteAgora);
 
+  // Altura real da barra (medida) para animar height em px ao surgir/sumir — mais
+  // confiável entre navegadores que animar grid-template-rows. `animar` só liga
+  // depois do 1º frame, pra a barra não deslizar no carregamento da página.
+  const conteudoRef = useRef<HTMLDivElement>(null);
+  const [altura, setAltura] = useState(0);
+  const [animar, setAnimar] = useState(false);
+
+  useEffect(() => {
+    const el = conteudoRef.current;
+    if (!el) return;
+    const medir = () => setAltura(el.scrollHeight);
+    medir();
+    // ResizeObserver mantém a altura certa quando o painel de filtros abre/fecha.
+    const ro = new ResizeObserver(medir);
+    ro.observe(el);
+    const raf = requestAnimationFrame(() => setAnimar(true));
+    return () => {
+      ro.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [pathname, query]);
+
   useEffect(() => {
     const grade = document.getElementById("grade-categorias");
     if (!grade) {
@@ -66,63 +88,81 @@ export function CategoryPills({ categorias }: { categorias: Categoria[] }) {
     return null;
   }
 
-  if (!visivel) {
-    return null;
-  }
-
-  const pill = (active: boolean) =>
+  // Aba estilo "underline": sem fundo cheio; a ativa é marcada por um sublinhado
+  // dourado. Padding inferior curto (pb-1.5) deixa a listra perto do nome e enxuga
+  // a parte de baixo da barra. Os 2px de borda ficam reservados também na inativa
+  // (transparente) para não dar pulo de layout ao trocar de aba.
+  const tab = (active: boolean) =>
     cn(
-      "shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
+      "shrink-0 border-b-2 pt-3 pb-1.5 text-sm transition-colors",
       active
-        ? "border-primary bg-primary text-primary-foreground"
-        : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
+        ? "border-primary font-semibold text-primary"
+        : "border-transparent font-medium text-muted-foreground hover:text-foreground"
     );
 
   return (
-    <div className="border-b border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
-      <div className="mx-auto flex max-w-6xl items-center gap-2 px-4">
-        <nav
-          aria-label="Categorias"
-          className="flex flex-1 flex-nowrap gap-2 overflow-x-auto py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          <Link href="/" className={pill(!activeSlug)}>
-            Todos
-          </Link>
-          {categorias.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/?categoria=${cat.slug}`}
-              className={pill(activeSlug === cat.slug)}
-            >
-              {cat.nome}
-            </Link>
-          ))}
-        </nav>
-
-        <button
-          type="button"
-          onClick={() => setFiltrosAbertos((v) => !v)}
-          aria-expanded={filtrosAbertos}
-          aria-controls="painel-filtros"
-          className={cn(
-            "flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
-            filtrosAbertos || precoAtivo
-              ? "border-primary bg-primary/10 text-primary"
-              : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
-          )}
-        >
-          <SlidersHorizontal className="size-4" />
-          Filtros
-        </button>
-      </div>
-
-      {filtrosAbertos && (
-        <div id="painel-filtros" className="border-t border-border bg-card/40">
-          <div className="mx-auto max-w-6xl px-4 py-3">
-            <PriceFilter />
-          </div>
-        </div>
+    // Surge/some ao rolar animando a altura em px (medida) + fade. Animar height em
+    // px é confiável em qualquer navegador (mais que grid-template-rows). O header
+    // não tem mais borda inferior: barra + header são um bloco preto contínuo.
+    <div
+      aria-hidden={!visivel}
+      style={{ height: visivel ? altura : 0 }}
+      className={cn(
+        "overflow-hidden",
+        animar && "transition-[height,opacity] duration-300 ease-in-out",
+        visivel ? "opacity-100" : "pointer-events-none opacity-0"
       )}
+    >
+      <div ref={conteudoRef}>
+        <div className="border-b border-border bg-background">
+          <div className="mx-auto flex max-w-6xl items-stretch px-4">
+            <nav
+              aria-label="Categorias"
+              className="flex flex-1 flex-nowrap items-stretch gap-5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              <Link href="/" className={tab(!activeSlug)}>
+                Todos
+              </Link>
+              {categorias.map((cat) => (
+                <Link
+                  key={cat.id}
+                  href={`/?categoria=${cat.slug}`}
+                  className={tab(activeSlug === cat.slug)}
+                >
+                  {cat.nome}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Divisória fininha: separa o "Filtros" das categorias sem a caixa preta. */}
+            <div aria-hidden className="my-2 ml-2.5 mr-3 w-px self-stretch bg-border" />
+
+            <button
+              type="button"
+              onClick={() => setFiltrosAbertos((v) => !v)}
+              aria-expanded={filtrosAbertos}
+              aria-controls="painel-filtros"
+              className={cn(
+                "flex shrink-0 items-center gap-1.5 pt-3 pb-1.5 text-sm transition-colors",
+                filtrosAbertos || precoAtivo
+                  ? "font-semibold text-primary"
+                  : "font-medium text-primary/90 hover:text-primary"
+              )}
+            >
+              <SlidersHorizontal className="size-4" />
+              Filtros
+            </button>
+          </div>
+
+          {filtrosAbertos && (
+            <div id="painel-filtros" className="border-t border-border bg-card/40">
+              <div className="mx-auto max-w-6xl px-4 py-3">
+                <PriceFilter />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

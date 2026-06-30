@@ -109,10 +109,27 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
     preview headless NÃO dispara `scroll` nem IO — pra testar o handler, `window.dispatchEvent(new
     Event('scroll'))` após o scrollTo (validado: barra aparece ao passar a grade, some no topo).
     Screenshots do preview deram timeout nesta sessão; verificação foi via `preview_eval` (DOM/estado) +
-    `npm run build` limpo (SSG dos 33 produtos intacto). **Falta o teste visual do Lucas no navegador.**
-  - **➡️ PRÓXIMA (após aprovação da Etapa 3):** se o Lucas aprovar, **commit + push**; senão, **reset pro
-    `78989dd`**. Possível Etapa 4 / polimento: imagem real no banner depende de foto boa; "Mais vendidos"
-    real; revisar mobile da nova home.
+    `npm run build` limpo (SSG dos 33 produtos intacto). **Etapa 3 APROVADA pelo Lucas e no ar** (commit
+    `0a6d888`).
+  - **✅ Barra de categorias v2 — visual refinado (aprovado, sessão de 2026-06-30):** após a Etapa 3, o
+    Lucas pediu uma série de ajustes na barra sticky (`CategoryPills` + `SiteHeader`), decididos por
+    mockups: (a) **abas estilo "underline"** (sem pill cheia; ativa = texto dourado + sublinhado dourado
+    perto do nome via `pt-3 pb-1.5`; inativa com `border-b-2` transparente reservado p/ não pular layout);
+    (b) **"Filtros" sem caixa preta** — virou só ícone (`SlidersHorizontal`) + texto dourado, com uma
+    **divisória vertical fininha** (`w-px bg-border`) à esquerda; (c) **header + barra como bloco preto
+    contínuo**: removida a `border-b` do `<header>` e o header virou **opaco** (`bg-background`, sem
+    `backdrop-blur`) pra casar com a barra (`bg-background`); (d) **animação de surgir/sumir ao rolar**.
+    **GOTCHA importante (animação):** animar `grid-template-rows` (`0fr↔1fr`) funciona no preview mas é
+    **inconsistente entre navegadores** (não animava o recolher no Chrome do Lucas). Solução final =
+    animar **`height` em px** (altura real medida com `useRef` + `ResizeObserver`, que reage ao painel de
+    filtros abrir) + fade de opacidade; flag `animar` ligada via `requestAnimationFrame` pós-1º-frame pra
+    não deslizar no carregamento. Tudo verificado no preview por `preview_eval` (alturas no meio do
+    colapso 41→37→13→3→0) + build limpo. **GOTCHA do dev server:** o Turbopack ficou com cache de um
+    estado quebrado intermediário (erros stale de parse no console mesmo após corrigir) — precisou
+    **reiniciar o dev server** (`preview_stop`/`preview_start`); o `npm run build` em processo separado já
+    dava o sinal correto.
+  - **➡️ PRÓXIMA / polimento possível:** imagem real no banner depende de foto boa; "Mais vendidos" com
+    métrica real (groupBy ItemPedido); revisar a nova home + barra no mobile (375px) com calma.
 - **Fase atual:** 5 — Backlog / pós-validação **EM ANDAMENTO** 🚧 (Fases 0–4 fechadas; demo no ar e
   testada). O Lucas está pegando itens do backlog que **não dependem do dono** (valor de portfólio).
   **Itens dependentes do dono seguem pendentes** (não bloqueiam a demo): **preços reais** (hoje
