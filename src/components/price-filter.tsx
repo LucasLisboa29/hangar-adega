@@ -56,7 +56,7 @@ export function PriceFilter() {
       </div>
 
       <Button type="submit" variant="outline" size="sm" className="h-9">
-        Filtrar
+        Aplicar
       </Button>
 
       {ativo && (

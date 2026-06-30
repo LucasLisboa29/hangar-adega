@@ -78,12 +78,20 @@ compra e um **painel admin** para o dono ter controle — tudo construído **do 
     O hero/subtítulo da marca na home só renderiza quando `!filtrando`. O layout busca `getCategorias`
     (verificado: **SSG de `/produto/[slug]` segue intacto**). Verificado no preview (sticky ao rolar,
     hero some na categoria, nav some no checkout); build limpo.
-  - **➡️ PRÓXIMAS ETAPAS (retomar aqui):** **Etapa 2** — filtro de preço escondido: hoje a
-    `<PriceFilter>` ainda está aparente na home (`(site)/page.tsx`); mover pra um painel que abre por
-    um botão **"Filtros"** na barra sticky (dentro de `CategoryPills`, que já é client — guardar estado
-    de aberto/fechado lá). **Etapa 3** — grade com todas as categorias visíveis na home (tiles com
-    ícone; precisa de um mapa categoria→ícone lucide). **Etapa 4** — banner "Oferta da semana" (puxa de
-    `getProdutosEmOferta`) + trilha "Mais vendidos" (proxy via itens mais pedidos / fallback Destaques).
+  - **✅ Etapa 2 FEITA (filtro de preço escondido):** a `<PriceFilter>` saiu da home (`(site)/page.tsx`)
+    e foi pra dentro do `CategoryPills`. Um botão **"Filtros"** (ícone `SlidersHorizontal`) fica fixo na
+    ponta direita da barra sticky (fora do scroll horizontal das pills — `nav` é `flex-1`, botão é
+    `shrink-0`); ao clicar abre/fecha um **painel** logo abaixo da barra (`id="painel-filtros"`,
+    `border-t`/`bg-card/40`) que renderiza a `<PriceFilter>`. Estado aberto/fechado vive em `useState`
+    no `CategoryPills`; **abre automático** quando já há `precoMin`/`precoMax` na URL (lazy init via
+    `useSearchParams`), e o botão ganha realce dourado (`bg-primary/10`) quando aberto OU com filtro
+    ativo. Label do submit virou "Aplicar". Verificado no preview (abre/fecha, auto-abre em
+    `?precoMax=5` com 6 produtos pelo preço efetivo, hero some ao filtrar, sem erro de console); build
+    limpo (SSG dos 33 produtos intacto).
+  - **➡️ PRÓXIMAS ETAPAS (retomar aqui):** **Etapa 3** — grade com todas as categorias visíveis na home
+    (tiles com ícone; precisa de um mapa categoria→ícone lucide). **Etapa 4** — banner "Oferta da
+    semana" (puxa de `getProdutosEmOferta`) + trilha "Mais vendidos" (proxy via itens mais pedidos /
+    fallback Destaques).
 - **Fase atual:** 5 — Backlog / pós-validação **EM ANDAMENTO** 🚧 (Fases 0–4 fechadas; demo no ar e
   testada). O Lucas está pegando itens do backlog que **não dependem do dono** (valor de portfólio).
   **Itens dependentes do dono seguem pendentes** (não bloqueiam a demo): **preços reais** (hoje

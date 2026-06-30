@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import { SearchX, Star, Tag } from "lucide-react";
 
-import { PriceFilter } from "@/components/price-filter";
 import { ProductCard } from "@/components/product-card";
 import {
   buscarProdutos,
@@ -47,12 +45,6 @@ export default async function Home({
           </p>
         </section>
       )}
-
-      <div className="mb-6">
-        <Suspense fallback={null}>
-          <PriceFilter />
-        </Suspense>
-      </div>
 
       {filtrando ? (
         <ResultadosFiltrados
